@@ -201,6 +201,31 @@ Future benchmarks will compare additional language models and inference engines 
 
 ---
 
+## Cold and Warm Runs
+
+Benchmark results distinguish between two execution modes:
+
+- **Cold run:** The model is not loaded in GPU memory before the benchmark.
+- **Warm run:** The model is already loaded in GPU memory before the benchmark.
+
+Cold runs measure model loading and startup overhead.
+
+Warm runs are used for comparing response generation speed and reasoning modes because they remove most storage-related loading time.
+
+---
+
+## Initial Qwen3 8B Observation
+
+Initial testing showed approximately:
+
+- 75 tokens per second in non-reasoning mode
+- 75 tokens per second in reasoning mode
+- significantly higher total token output in reasoning mode
+- approximately 35 seconds for the first HDD-backed cold start
+- approximately 2 seconds for a warm non-reasoning response
+
+---
+
 # Long-Term Objective
 
 The goal is to build a repeatable benchmark suite for self-hosted language models.

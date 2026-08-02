@@ -1,0 +1,22 @@
+{
+  "benchmark_timestamp": "2026-08-02T22:48:18.008223+03:00",
+  "prompt_name": "finnish.md",
+  "model": "qwen3:8b",
+  "think_enabled": true,
+  "context_size": 4096,
+  "temperature": 0,
+  "seed": 42,
+  "prompt": "Vastaa suomeksi.\n\nSelitä noin 150 sanalla, mikä Raspberry Pi on, mihin sitä käytetään ja miksi se on suosittu harrastajien keskuudessa.\n\nKäytä luonnollista ja selkeää yleiskieltä.",
+  "response": "Raspberry Pi on pieni, halpa tietokone, joka kehitettiin Raspberry Pi -koulutusjärjestön toimesta. Se on suunniteltu oppimiseen ja harrastusprojektien toteuttamiseen. Käytetään esimerkiksi ohjelmointiin, kotitalousautomaatioon, mediakeskuksiin tai retro-pelisovelluksiin. Se on suosittu harrastajien keskuudessa, koska se on helppokäyttöinen, yhteisö tukee sitä monenlaisilla opetusohjelmilla ja se tarjoaa mahdollisuuden eksperimentoida elektroniikkaa ja ohjelmointia ilman kallista laitetta. Pieni koko, alhainen hinta ja monipuoliset mahdollisuudet tekevät siitä suosittua työkalua oppimiseen ja innovaatioon.",
+  "thinking": "Okay, the user wants me to explain what Raspberry Pi is, its uses, and why it's popular among hobbyists, all in about 150 words in Finnish. Let me start by recalling what Raspberry Pi is. It's a small, affordable computer developed by the Raspberry Pi Foundation. The key points are its size, cost, and versatility.\n\nNext, I need to mention the main uses. People use it for learning programming, building projects like home automation, media centers, or even as a retro gaming console. It's also used in education and DIY projects. \n\nWhy is it popular with hobbyists? Probably because it's easy to use, has a large community, lots of tutorials, and the ability to customize. Plus, it's a great tool for learning electronics and coding without a lot of expense. \n\nI should make sure the language is natural and clear, avoiding technical jargon. Let me check the word count. Let me structure the answer: first define Raspberry Pi, then its uses, then reasons for popularity. Keep each part concise. Make sure to mention the foundation, the size, affordability, and the community support. Avoid being too technical. Alright, time to put it all together in Finnish.\n",
+  "done_reason": "stop",
+  "metrics": {
+    "total_duration_seconds": 6.648,
+    "load_duration_seconds": 0.129,
+    "prompt_eval_count": 81,
+    "prompt_eval_duration_seconds": 0.059,
+    "eval_count": 481,
+    "eval_duration_seconds": 6.44,
+    "tokens_per_second": 74.69
+  }
+}
