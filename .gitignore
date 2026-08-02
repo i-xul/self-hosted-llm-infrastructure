@@ -1,0 +1,40 @@
+@'
+# Windows
+Thumbs.db
+Desktop.ini
+
+# Editors and IDEs
+.vscode/
+.idea/
+
+# Environment and secrets
+.env
+.env.*
+*.key
+*.pem
+
+# Logs
+*.log
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Local benchmark output
+benchmarks/*.json
+benchmarks/*.csv
+
+# Local notes and temporary files
+notes/
+temp/
+tmp/
+
+# Large local AI files
+*.gguf
+*.safetensors
+*.bin
+models/
+datasets/
+'@ | Set-Content .gitignore
