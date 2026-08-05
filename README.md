@@ -57,6 +57,7 @@ Current test model:
 Detailed comparison:
 
 - [Qwen3 8B vs. Gemma 3 12B](benchmarks/comparisons/qwen3-8b-vs-gemma3-12b.md)
+- [Local LLM Performance Leaderboard](benchmarks/LEADERBOARD.md)
 
 ---
 
@@ -92,7 +93,8 @@ A more detailed architecture description is available in the project documentati
 | [`MODELS.md`](docs/MODELS.md) | Language model evaluations |
 | [`BENCHMARKS.md`](docs/BENCHMARKS.md) | Benchmark methodology |
 | [`SECURITY.md`](docs/SECURITY.md) | Security architecture and principles |
-| [Model comparison](benchmarks/comparisons/qwen3-8b-vs-gemma3-12b.md) | First performance and response-quality comparison |
+| [`LEADERBOARD.md`](benchmarks/LEADERBOARD.md) | Automatically generated local LLM performance ranking |
+| [Model comparison](benchmarks/comparisons/qwen3-8b-vs-gemma3-12b.md) | Performance and response-quality comparison |
 
 ---
 
@@ -120,8 +122,13 @@ Detailed planning is available in `docs/ROADMAP.md`.
 self-hosted-llm-infrastructure/
 │
 ├── benchmarks/
+│   ├── LEADERBOARD.md
+│   ├── leaderboard.py
+│   ├── leaderboard/
 │   ├── comparisons/
 │   │   └── qwen3-8b-vs-gemma3-12b.md
+│   ├── prompts/
+│   └── results/
 |
 ├── docs/
 │   ├── ARCHITECTURE.md

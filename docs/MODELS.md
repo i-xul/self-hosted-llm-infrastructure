@@ -11,6 +11,14 @@ The objective is not to identify a single "best" model, but to understand the st
 | Qwen3 8B | 8.2B | Q4_K_M | 100% GPU | Benchmarked | [Qwen3 8B vs. Gemma 3 12B](../benchmarks/comparisons/qwen3-8b-vs-gemma3-12b.md) |
 | Gemma 3 12B | 12.2B | Q4_K_M | 100% GPU | Benchmarked | [Qwen3 8B vs. Gemma 3 12B](../benchmarks/comparisons/qwen3-8b-vs-gemma3-12b.md) |
 
+## Performance Leaderboard
+
+The automatically generated performance leaderboard is available here:
+
+- [Local LLM Performance Leaderboard](../benchmarks/LEADERBOARD.md)
+
+The leaderboard currently ranks models by average token generation speed. Manual response-quality evaluations are documented separately.
+
 ## Initial Performance Summary
 
 | Model | Stored size | Approximate generation speed | Initial observation |

@@ -25,3 +25,9 @@ Models are currently ranked by average token generation speed. Response quality 
 - All current models use Q4_K_M quantization and were tested with GPU acceleration.
 - A higher token rate does not automatically indicate better response quality.
 - Manual quality comparisons are stored in `benchmarks/comparisons/`.
+
+## Quality Comparisons
+
+Performance metrics should be interpreted together with manual response-quality evaluations.
+
+- [Qwen3 8B vs. Gemma 3 12B](comparisons/qwen3-8b-vs-gemma3-12b.md)
