@@ -1,0 +1,74 @@
+{
+  "summary_timestamp": "2026-08-05T19:40:30.494774+03:00",
+  "batch_timestamp": "20260805-193938",
+  "model": "qwen3:8b",
+  "prompt_name": "finnish.md",
+  "think_enabled": false,
+  "context_size": 4096,
+  "temperature": 0,
+  "seed": 42,
+  "run_count": 3,
+  "cold_run_count": 1,
+  "warm_run_count": 2,
+  "statistics": {
+    "total_duration_seconds": {
+      "mean": 13.21,
+      "median": 2.241,
+      "minimum": 2.228,
+      "maximum": 35.162
+    },
+    "load_duration_seconds": {
+      "mean": 10.996,
+      "median": 0.137,
+      "minimum": 0.125,
+      "maximum": 32.725
+    },
+    "generated_tokens": {
+      "mean": 160.0,
+      "median": 156.0,
+      "minimum": 156.0,
+      "maximum": 168.0
+    },
+    "generation_duration_seconds": {
+      "mean": 2.125,
+      "median": 2.068,
+      "minimum": 2.066,
+      "maximum": 2.241
+    },
+    "tokens_per_second": {
+      "mean": 75.313,
+      "median": 75.45,
+      "minimum": 74.98,
+      "maximum": 75.51
+    }
+  },
+  "runs": [
+    {
+      "run_number": 1,
+      "run_type": "cold",
+      "total_duration_seconds": 35.162,
+      "load_duration_seconds": 32.725,
+      "generated_tokens": 168,
+      "generation_duration_seconds": 2.241,
+      "tokens_per_second": 74.98
+    },
+    {
+      "run_number": 2,
+      "run_type": "warm",
+      "total_duration_seconds": 2.241,
+      "load_duration_seconds": 0.137,
+      "generated_tokens": 156,
+      "generation_duration_seconds": 2.066,
+      "tokens_per_second": 75.51
+    },
+    {
+      "run_number": 3,
+      "run_type": "warm",
+      "total_duration_seconds": 2.228,
+      "load_duration_seconds": 0.125,
+      "generated_tokens": 156,
+      "generation_duration_seconds": 2.068,
+      "tokens_per_second": 75.45
+    }
+  ]
+}

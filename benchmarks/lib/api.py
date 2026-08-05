@@ -41,9 +41,7 @@ def _request_json(
             f"Ollama returned HTTP {error.code}: {details}"
         ) from error
     except urllib.error.URLError as error:
-        raise RuntimeError(
-            f"Could not connect to Ollama at {url}."
-        ) from error
+        raise RuntimeError(f"Could not connect to Ollama at {url}.") from error
 
     return json.loads(response_data)
 
@@ -71,7 +69,6 @@ def detect_run_type(
 
     for loaded_model in loaded_models:
         loaded_name = loaded_model.get("name") or loaded_model.get("model")
-
         if loaded_name == model:
             return "warm"
 

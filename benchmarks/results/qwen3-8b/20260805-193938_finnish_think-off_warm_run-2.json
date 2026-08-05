@@ -1,0 +1,26 @@
+{
+  "benchmark_timestamp": "2026-08-05T19:40:24.149178+03:00",
+  "batch_timestamp": "20260805-193938",
+  "run_number": 2,
+  "total_runs": 3,
+  "prompt_name": "finnish.md",
+  "model": "qwen3:8b",
+  "think_enabled": false,
+  "run_type": "warm",
+  "context_size": 4096,
+  "temperature": 0,
+  "seed": 42,
+  "prompt": "Vastaa suomeksi.\n\nSelitä noin 150 sanalla, mikä Raspberry Pi on, mihin sitä käytetään ja miksi se on suosittu harrastajien keskuudessa.\n\nKäytä luonnollista ja selkeää yleiskieltä.",
+  "response": "Raspberry Pi on pienikokoinen, edullinen tietokone, joka on suosittu harrastajien keskuudessa. Se on suunniteltu oppimiseen ja projektiin rakentamiseen, kuten robotiikkaan, ohjelmointiin ja tietokoneiden rakentamiseen. Se on helppo käyttää ja tarjoaa monipuolisen mahdollisuuden kokeilla erilaisia teknologioita. Sen ansiosta ihmiset voivat oppia ohjelmointia, elektroniikkaa ja tietojenkäsittelyä käytännössä.",
+  "thinking": "",
+  "done_reason": "stop",
+  "metrics": {
+    "total_duration_seconds": 2.241,
+    "load_duration_seconds": 0.137,
+    "prompt_eval_count": 87,
+    "prompt_eval_duration_seconds": 0.02,
+    "eval_count": 156,
+    "eval_duration_seconds": 2.066,
+    "tokens_per_second": 75.51
+  }
+}
