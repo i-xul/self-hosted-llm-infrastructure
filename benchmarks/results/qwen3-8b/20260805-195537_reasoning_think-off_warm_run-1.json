@@ -1,0 +1,26 @@
+{
+  "benchmark_timestamp": "2026-08-05T19:57:34.983656+03:00",
+  "batch_timestamp": "20260805-195537",
+  "run_number": 1,
+  "total_runs": 1,
+  "prompt_name": "reasoning.md",
+  "model": "qwen3:8b",
+  "think_enabled": false,
+  "run_type": "warm",
+  "context_size": 4096,
+  "temperature": 0,
+  "seed": 42,
+  "prompt": "A server has three storage drives:\n\n- Drive A: 2 TB, 80% full\n- Drive B: 4 TB, 55% full\n- Drive C: 8 TB, 25% full\n\nA backup requires 3.5 TB of free space on a single drive.\n\nDetermine which drives can store the backup.\n\nShow the calculations clearly and give a concise final answer.",
+  "response": "To determine which drives can store a **3.5 TB backup**, we need to calculate the **free space** on each drive.\n\n---\n\n### **Drive A:**\n- Total capacity: 2 TB  \n- Used: 80%  \n- Free space = 2 TB × (100% - 80%) = 2 TB × 20% = **0.4 TB**  \n→ **Not enough** (0.4 TB < 3.5 TB)\n\n---\n\n### **Drive B:**\n- Total capacity: 4 TB  \n- Used: 55%  \n- Free space = 4 TB × (100% - 55%) = 4 TB × 45% = **1.8 TB**  \n→ **Not enough** (1.8 TB < 3.5 TB)\n\n---\n\n### **Drive C:**\n- Total capacity: 8 TB  \n- Used: 25%  \n- Free space = 8 TB × (100% - 25%) = 8 TB × 75% = **6 TB**  \n→ **Enough** (6 TB > 3.5 TB)\n\n---\n\n### ✅ **Final Answer:**\nOnly **Drive C** has enough free space to store the 3.5 TB backup.  \n**Answer: Drive C**",
+  "thinking": "",
+  "done_reason": "stop",
+  "metrics": {
+    "total_duration_seconds": 4.054,
+    "load_duration_seconds": 0.128,
+    "prompt_eval_count": 101,
+    "prompt_eval_duration_seconds": 0.092,
+    "eval_count": 283,
+    "eval_duration_seconds": 3.792,
+    "tokens_per_second": 74.64
+  }
+}

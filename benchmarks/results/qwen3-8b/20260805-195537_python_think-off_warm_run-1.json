@@ -1,0 +1,26 @@
+{
+  "benchmark_timestamp": "2026-08-05T19:57:06.484101+03:00",
+  "batch_timestamp": "20260805-195537",
+  "run_number": 1,
+  "total_runs": 1,
+  "prompt_name": "python.md",
+  "model": "qwen3:8b",
+  "think_enabled": false,
+  "run_type": "warm",
+  "context_size": 4096,
+  "temperature": 0,
+  "seed": 42,
+  "prompt": "Write a complete Python 3 program that checks whether a TCP port is open.\n\nRequirements:\n\n- Accept the hostname and port as command-line arguments.\n- Use only the Python standard library.\n- Use a configurable connection timeout.\n- Handle invalid hostnames and connection errors.\n- Return an appropriate exit code.\n- Include clear error messages.\n- Briefly explain how to run the program.",
+  "response": "Here's a complete Python 3 program that checks whether a TCP port is open on a given hostname. It uses only the Python standard library and meets all your requirements.\n\n---\n\n### ✅ Python Program: `check_tcp_port.py`\n\n```python\nimport sys\nimport socket\nimport argparse\n\ndef check_tcp_port(host, port, timeout=5):\n    try:\n        with socket.create_connection((host, port), timeout=timeout):\n            print(f\"Port {port} on {host} is open.\")\n            return 0\n    except socket.gaierror:\n        print(f\"Error: Invalid hostname '{host}'.\")\n        return 1\n    except socket.timeout:\n        print(f\"Error: Connection to {host}:{port} timed out.\")\n        return 1\n    except ConnectionRefusedError:\n        print(f\"Error: Connection to {host}:{port} was refused.\")\n        return 1\n    except Exception as e:\n        print(f\"Error: An unexpected error occurred: {e}\")\n        return 1\n\ndef main():\n    parser = argparse.ArgumentParser(description=\"Check if a TCP port is open.\")\n    parser.add_argument(\"host\", type=str, help=\"Hostname or IP address\")\n    parser.add_argument(\"port\", type=int, help=\"Port number\")\n    parser.add_argument(\"--timeout\", type=int, default=5, help=\"Connection timeout in seconds (default: 5)\")\n\n    args = parser.parse_args()\n\n    exit_code = check_tcp_port(args.host, args.port, args.timeout)\n    sys.exit(exit_code)\n\nif __name__ == \"__main__\":\n    main()\n```\n\n---\n\n### 📌 How to Run the Program\n\n1. **Save the code** to a file named `check_tcp_port.py`.\n2. **Run the script** from the command line with the following syntax:\n\n```bash\npython check_tcp_port.py <hostname> <port> [--timeout <seconds>]\n```\n\n**Examples:**\n\n```bash\npython check_tcp_port.py example.com 80\npython check_tcp_port.py 127.0.0.1 22 --timeout 3\npython check_tcp_port.py invalid-host 80\n```\n\n---\n\n### 📌 Exit Codes\n\n- `0`: Port is open ✅\n- `1`: Port is closed or connection failed ❌\n- `2`: Invalid command-line arguments ❌\n\n---\n\n### ✅ Notes\n\n- The script uses `socket.create_connection()` to test the TCP connection.\n- It handles common errors like invalid hostnames, timeouts, and connection refusals.\n- The timeout is configurable via the `--timeout` flag.\n\nLet me know if you'd like to extend this to check multiple ports or add more features!",
+  "thinking": "",
+  "done_reason": "stop",
+  "metrics": {
+    "total_duration_seconds": 7.835,
+    "load_duration_seconds": 0.128,
+    "prompt_eval_count": 92,
+    "prompt_eval_duration_seconds": 0.083,
+    "eval_count": 563,
+    "eval_duration_seconds": 7.584,
+    "tokens_per_second": 74.23
+  }
+}

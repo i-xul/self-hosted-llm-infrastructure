@@ -71,13 +71,39 @@ def build_result_record(
     }
 
 
-def build_summary_record(records: list[dict[str, Any]]) -> dict[str, Any]:
-    """Build aggregate statistics for a repeated benchmark batch."""
+def _build_statistics(
+    records: list[dict[str, Any]],
+) -> dict[str, dict[str, float | None]]:
+    """Build aggregate statistics from normalized benchmark records."""
+    metrics = [record["metrics"] for record in records]
+
+    return {
+        "total_duration_seconds": summarize_numeric_values(
+            [metric["total_duration_seconds"] for metric in metrics]
+        ),
+        "load_duration_seconds": summarize_numeric_values(
+            [metric["load_duration_seconds"] for metric in metrics]
+        ),
+        "generated_tokens": summarize_numeric_values(
+            [metric["eval_count"] for metric in metrics]
+        ),
+        "generation_duration_seconds": summarize_numeric_values(
+            [metric["eval_duration_seconds"] for metric in metrics]
+        ),
+        "tokens_per_second": summarize_numeric_values(
+            [metric["tokens_per_second"] for metric in metrics]
+        ),
+    }
+
+
+def build_summary_record(
+    records: list[dict[str, Any]],
+) -> dict[str, Any]:
+    """Build aggregate statistics for one prompt batch."""
     if not records:
         raise ValueError("Cannot build a summary without benchmark records.")
 
     first = records[0]
-    metrics = [record["metrics"] for record in records]
 
     return {
         "summary_timestamp": datetime.now().astimezone().isoformat(),
@@ -89,35 +115,83 @@ def build_summary_record(records: list[dict[str, Any]]) -> dict[str, Any]:
         "temperature": first["temperature"],
         "seed": first["seed"],
         "run_count": len(records),
-        "cold_run_count": sum(record["run_type"] == "cold" for record in records),
-        "warm_run_count": sum(record["run_type"] == "warm" for record in records),
-        "statistics": {
-            "total_duration_seconds": summarize_numeric_values(
-                [metric["total_duration_seconds"] for metric in metrics]
-            ),
-            "load_duration_seconds": summarize_numeric_values(
-                [metric["load_duration_seconds"] for metric in metrics]
-            ),
-            "generated_tokens": summarize_numeric_values(
-                [metric["eval_count"] for metric in metrics]
-            ),
-            "generation_duration_seconds": summarize_numeric_values(
-                [metric["eval_duration_seconds"] for metric in metrics]
-            ),
-            "tokens_per_second": summarize_numeric_values(
-                [metric["tokens_per_second"] for metric in metrics]
-            ),
-        },
+        "cold_run_count": sum(
+            record["run_type"] == "cold" for record in records
+        ),
+        "warm_run_count": sum(
+            record["run_type"] == "warm" for record in records
+        ),
+        "statistics": _build_statistics(records),
         "runs": [
             {
                 "run_number": record["run_number"],
                 "run_type": record["run_type"],
-                "total_duration_seconds": record["metrics"]["total_duration_seconds"],
-                "load_duration_seconds": record["metrics"]["load_duration_seconds"],
+                "total_duration_seconds": record["metrics"][
+                    "total_duration_seconds"
+                ],
+                "load_duration_seconds": record["metrics"][
+                    "load_duration_seconds"
+                ],
                 "generated_tokens": record["metrics"]["eval_count"],
-                "generation_duration_seconds": record["metrics"]["eval_duration_seconds"],
+                "generation_duration_seconds": record["metrics"][
+                    "eval_duration_seconds"
+                ],
                 "tokens_per_second": record["metrics"]["tokens_per_second"],
             }
             for record in records
+        ],
+    }
+
+
+def build_master_summary_record(
+    *,
+    records: list[dict[str, Any]],
+    prompt_summaries: list[dict[str, Any]],
+) -> dict[str, Any]:
+    """Build aggregate statistics across every selected prompt."""
+    if not records or not prompt_summaries:
+        raise ValueError(
+            "Cannot build a master summary without benchmark records."
+        )
+
+    first = records[0]
+
+    return {
+        "summary_timestamp": datetime.now().astimezone().isoformat(),
+        "batch_timestamp": first["batch_timestamp"],
+        "model": first["model"],
+        "think_enabled": first["think_enabled"],
+        "context_size": first["context_size"],
+        "temperature": first["temperature"],
+        "seed": first["seed"],
+        "prompt_count": len(prompt_summaries),
+        "total_run_count": len(records),
+        "cold_run_count": sum(
+            record["run_type"] == "cold" for record in records
+        ),
+        "warm_run_count": sum(
+            record["run_type"] == "warm" for record in records
+        ),
+        "statistics": _build_statistics(records),
+        "prompts": [
+            {
+                "prompt_name": summary["prompt_name"],
+                "run_count": summary["run_count"],
+                "cold_run_count": summary["cold_run_count"],
+                "warm_run_count": summary["warm_run_count"],
+                "mean_total_duration_seconds": summary["statistics"][
+                    "total_duration_seconds"
+                ]["mean"],
+                "median_total_duration_seconds": summary["statistics"][
+                    "total_duration_seconds"
+                ]["median"],
+                "mean_generated_tokens": summary["statistics"][
+                    "generated_tokens"
+                ]["mean"],
+                "mean_tokens_per_second": summary["statistics"][
+                    "tokens_per_second"
+                ]["mean"],
+            }
+            for summary in prompt_summaries
         ],
     }

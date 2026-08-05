@@ -7,16 +7,23 @@ import json
 import sys
 from datetime import datetime
 from pathlib import Path
+from typing import Any
 
 from lib.api import DEFAULT_API_URL, call_ollama, detect_run_type
-from lib.prompts import read_prompt, resolve_prompt_path
+from lib.prompts import list_prompt_paths, read_prompt, resolve_prompt_path
 from lib.reports import (
     write_json_result,
     write_markdown_result,
+    write_master_summary_json,
+    write_master_summary_markdown,
     write_summary_json,
     write_summary_markdown,
 )
-from lib.results import build_result_record, build_summary_record
+from lib.results import (
+    build_master_summary_record,
+    build_result_record,
+    build_summary_record,
+)
 from lib.utils import RESULTS_DIR, safe_path_component
 
 DEFAULT_MODEL = "qwen3:8b"
@@ -29,7 +36,14 @@ def parse_arguments() -> argparse.Namespace:
     )
     parser.add_argument(
         "prompt",
+        nargs="?",
         help="Prompt filename or name, for example finnish or finnish.md.",
+    )
+    parser.add_argument(
+        "--all",
+        action="store_true",
+        dest="run_all",
+        help="Run every Markdown prompt in the prompts directory.",
     )
     parser.add_argument(
         "--model",
@@ -46,7 +60,7 @@ def parse_arguments() -> argparse.Namespace:
         "--repeat",
         type=int,
         default=1,
-        help="Number of benchmark runs. Default: 1",
+        help="Number of runs for each prompt. Default: 1",
     )
     parser.add_argument(
         "--api-url",
@@ -63,9 +77,28 @@ def parse_arguments() -> argparse.Namespace:
 
 
 def validate_arguments(args: argparse.Namespace) -> None:
-    """Validate command-line argument values."""
+    """Validate command-line argument combinations and values."""
     if args.repeat < 1:
         raise ValueError("--repeat must be at least 1.")
+
+    if args.run_all and args.prompt:
+        raise ValueError("Use either a prompt name or --all, not both.")
+
+    if not args.run_all and not args.prompt:
+        raise ValueError("Provide a prompt name or use --all.")
+
+
+def select_prompt_paths(args: argparse.Namespace) -> list[Path]:
+    """Select one prompt or every available prompt."""
+    if args.run_all:
+        prompt_paths = list_prompt_paths()
+
+        if not prompt_paths:
+            raise FileNotFoundError("No Markdown prompt files were found.")
+
+        return prompt_paths
+
+    return [resolve_prompt_path(args.prompt)]
 
 
 def run_single_benchmark(
@@ -79,7 +112,7 @@ def run_single_benchmark(
     run_number: int,
     total_runs: int,
     batch_timestamp: str,
-) -> dict:
+) -> dict[str, Any]:
     """Run and store one benchmark execution."""
     run_type = detect_run_type(
         generate_api_url=api_url,
@@ -140,65 +173,148 @@ def run_single_benchmark(
     return record
 
 
+def run_prompt_batch(
+    *,
+    prompt_path: Path,
+    model: str,
+    think_enabled: bool,
+    repeat: int,
+    api_url: str,
+    timeout: int,
+    batch_timestamp: str,
+) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+    """Run all requested repetitions for one prompt."""
+    prompt_text = read_prompt(prompt_path)
+    records: list[dict[str, Any]] = []
+
+    print()
+    print("=" * 72)
+    print(f"Prompt batch: {prompt_path.name}")
+    print("=" * 72)
+
+    for run_number in range(1, repeat + 1):
+        record = run_single_benchmark(
+            prompt_name=prompt_path.name,
+            prompt_text=prompt_text,
+            model=model,
+            think_enabled=think_enabled,
+            api_url=api_url,
+            timeout=timeout,
+            run_number=run_number,
+            total_runs=repeat,
+            batch_timestamp=batch_timestamp,
+        )
+        records.append(record)
+
+    summary = build_summary_record(records)
+
+    if repeat > 1:
+        model_dir = RESULTS_DIR / safe_path_component(model)
+        think_label = "on" if think_enabled else "off"
+        summary_base = model_dir / (
+            f"{batch_timestamp}_{prompt_path.stem}_"
+            f"think-{think_label}_repeat-{repeat}_summary"
+        )
+
+        summary_json_path = write_summary_json(summary, summary_base)
+        summary_markdown_path = write_summary_markdown(
+            summary,
+            summary_base,
+        )
+
+        stats = summary["statistics"]
+
+        print()
+        print("Prompt summary")
+        print(f"Runs: {summary['run_count']}")
+        print(f"Cold runs: {summary['cold_run_count']}")
+        print(f"Warm runs: {summary['warm_run_count']}")
+        print(
+            "Average total duration: "
+            f"{stats['total_duration_seconds']['mean']} s"
+        )
+        print(
+            "Median total duration: "
+            f"{stats['total_duration_seconds']['median']} s"
+        )
+        print(
+            "Average generation speed: "
+            f"{stats['tokens_per_second']['mean']} tokens/s"
+        )
+        print(f"Summary JSON: {summary_json_path}")
+        print(f"Summary Markdown: {summary_markdown_path}")
+
+    return records, summary
+
+
 def main() -> int:
-    """Run one or more benchmarks and save results and summaries."""
+    """Run selected benchmarks and save result reports."""
     args = parse_arguments()
 
     try:
         validate_arguments(args)
-        prompt_path = resolve_prompt_path(args.prompt)
-        prompt_text = read_prompt(prompt_path)
+        prompt_paths = select_prompt_paths(args)
         batch_timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+        think_enabled = args.think == "on"
 
-        records = []
+        all_records: list[dict[str, Any]] = []
+        prompt_summaries: list[dict[str, Any]] = []
 
-        for run_number in range(1, args.repeat + 1):
-            record = run_single_benchmark(
-                prompt_name=prompt_path.name,
-                prompt_text=prompt_text,
+        for prompt_path in prompt_paths:
+            records, summary = run_prompt_batch(
+                prompt_path=prompt_path,
                 model=args.model,
-                think_enabled=args.think == "on",
+                think_enabled=think_enabled,
+                repeat=args.repeat,
                 api_url=args.api_url,
                 timeout=args.timeout,
-                run_number=run_number,
-                total_runs=args.repeat,
                 batch_timestamp=batch_timestamp,
             )
-            records.append(record)
+            all_records.extend(records)
+            prompt_summaries.append(summary)
 
-        if args.repeat > 1:
-            summary = build_summary_record(records)
-
-            model_dir = RESULTS_DIR / safe_path_component(args.model)
-            summary_base = model_dir / (
-                f"{batch_timestamp}_{prompt_path.stem}_"
-                f"think-{args.think}_repeat-{args.repeat}_summary"
+        if args.run_all:
+            master_summary = build_master_summary_record(
+                records=all_records,
+                prompt_summaries=prompt_summaries,
             )
 
-            summary_json_path = write_summary_json(summary, summary_base)
-            summary_markdown_path = write_summary_markdown(summary, summary_base)
+            model_dir = RESULTS_DIR / safe_path_component(args.model)
+            think_label = "on" if think_enabled else "off"
+            master_base = model_dir / (
+                f"{batch_timestamp}_all-prompts_"
+                f"think-{think_label}_repeat-{args.repeat}_master-summary"
+            )
 
-            stats = summary["statistics"]
+            master_json_path = write_master_summary_json(
+                master_summary,
+                master_base,
+            )
+            master_markdown_path = write_master_summary_markdown(
+                master_summary,
+                master_base,
+            )
+
+            stats = master_summary["statistics"]
 
             print()
-            print("Benchmark summary")
-            print(f"Runs: {summary['run_count']}")
-            print(f"Cold runs: {summary['cold_run_count']}")
-            print(f"Warm runs: {summary['warm_run_count']}")
+            print("=" * 72)
+            print("Master benchmark summary")
+            print("=" * 72)
+            print(f"Prompts: {master_summary['prompt_count']}")
+            print(f"Total runs: {master_summary['total_run_count']}")
+            print(f"Cold runs: {master_summary['cold_run_count']}")
+            print(f"Warm runs: {master_summary['warm_run_count']}")
             print(
                 "Average total duration: "
                 f"{stats['total_duration_seconds']['mean']} s"
             )
             print(
-                "Median total duration: "
-                f"{stats['total_duration_seconds']['median']} s"
-            )
-            print(
                 "Average generation speed: "
                 f"{stats['tokens_per_second']['mean']} tokens/s"
             )
-            print(f"Summary JSON: {summary_json_path}")
-            print(f"Summary Markdown: {summary_markdown_path}")
+            print(f"Master summary JSON: {master_json_path}")
+            print(f"Master summary Markdown: {master_markdown_path}")
 
         return 0
 

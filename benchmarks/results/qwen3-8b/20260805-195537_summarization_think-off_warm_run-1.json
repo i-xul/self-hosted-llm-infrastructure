@@ -1,0 +1,26 @@
+{
+  "benchmark_timestamp": "2026-08-05T19:57:46.117813+03:00",
+  "batch_timestamp": "20260805-195537",
+  "run_number": 1,
+  "total_runs": 1,
+  "prompt_name": "summarization.md",
+  "model": "qwen3:8b",
+  "think_enabled": false,
+  "run_type": "warm",
+  "context_size": 4096,
+  "temperature": 0,
+  "seed": 42,
+  "prompt": "Summarize the following text in Finnish.\n\nRequirements:\n\n- Use no more than five sentences.\n- Preserve the main arguments and conclusions.\n- Do not introduce information that is not present in the source text.\n- Use neutral and natural Finnish.\n\nSOURCE TEXT:\n\nA small organization is planning to replace several separate servers with a consolidated virtualization platform. The current environment contains independent systems for file storage, internal web applications, monitoring and backups. Maintaining the servers separately has increased electricity consumption, hardware costs and administrative work.\n\nThe proposed virtualization platform would allow multiple isolated virtual machines to run on fewer physical computers. Supporters of the change argue that centralized management would simplify updates, backups and monitoring. Hardware resources could also be allocated dynamically according to the needs of each service.\n\nHowever, the change introduces new risks. A failure in a virtualization host could affect several services simultaneously. The organization would therefore need reliable backups, tested recovery procedures and sufficient hardware redundancy. Administrators would also require training before the existing production services could be migrated safely.\n\nThe organization has decided to begin with a limited pilot deployment. Non-critical services will be migrated first, and performance, reliability and administrative workload will be evaluated for three months. A wider migration will be considered only if the pilot meets the agreed technical and operational requirements.",
+  "response": "Pieni järjestö suunnitteleeksi useiden erillisten palvelinten sijaan yhdistettyä virtualisointipohjaa. Nykyinen ympäristö sisältää erillisiä järjestelmiä tiedostojen tallennukseen, sisäisiin verkkosovelluksiin, valvontaan ja varmuuskopiointiin. Erillisten palvelinten ylläpito on lisännyt sähköenergian kulutusta, laitteistokustannuksia ja hallintatyötä.\n\nUudistus mahdollistaisi useiden eristettyjen virtuaalipalvelimien toiminnan vähemmän fyysisillä palvelimilla. Muutokseen kannattajat pitävät paikallaan yksinkertaistetun päivitetyn, varmuuskopioidun ja valvotun järjestelmän hallinnan. Laitevarojen voidaan myös jakaa dynaamisesti eri palveluiden tarpeiden mukaan.\n\nKuitenkin muutos tuo uusia riskejä. Virtualisointipohjalle tapahtuva häiriö voisi vaikuttaa useisiin palveluihin samanaikaisesti. Järjestö tarvitsee siis luotettavia varmuuskopiointeja, testattuja palautusprosesseja ja tarpeeksi laitteistoverkkoja. Hallintajat tarvitsevat myös koulutusta ennen nykyisten tuotantopalveluiden turvallista siirtoa.\n\nJärjestö on päättänyt aloittaa rajoitetun pilotin. Ensimmäisenä siirretään ei-kriittisiä palveluita, ja kolmen kuukauden aikana arvioidaan suorituskykyä, luotettavuutta ja hallintatyötä. Laajempi siirto tarkastellaan vain silloin, kun pilotti vastaa sovittuja teknisiä ja toiminnallisia vaatimuksia.",
+  "thinking": "",
+  "done_reason": "stop",
+  "metrics": {
+    "total_duration_seconds": 7.002,
+    "load_duration_seconds": 0.129,
+    "prompt_eval_count": 273,
+    "prompt_eval_duration_seconds": 0.166,
+    "eval_count": 496,
+    "eval_duration_seconds": 6.686,
+    "tokens_per_second": 74.19
+  }
+}
