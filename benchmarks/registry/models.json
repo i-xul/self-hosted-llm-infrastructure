@@ -1,0 +1,23 @@
+{
+    "schema_version": 1,
+    "models": [
+        {
+            "name": "qwen3:8b",
+            "display_name": "Qwen3 8B",
+            "family": "qwen3",
+            "benchmarked": true
+        },
+        {
+            "name": "gemma3:12b",
+            "display_name": "Gemma 3 12B",
+            "family": "gemma3",
+            "benchmarked": true
+        },
+        {
+            "name": "llama3.1:8b",
+            "display_name": "Llama 3.1 8B",
+            "family": "llama",
+            "benchmarked": true
+        }
+    ]
+}
