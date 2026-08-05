@@ -48,14 +48,47 @@ def _request_json(
     return json.loads(response_data)
 
 
-def build_ps_url(generate_api_url: str) -> str:
-    """Build the Ollama process-list endpoint from the generate endpoint."""
+def _build_api_url(generate_api_url: str, endpoint: str) -> str:
+    """Build an Ollama API endpoint from the generate endpoint."""
     suffix = "/api/generate"
 
     if generate_api_url.endswith(suffix):
-        return generate_api_url[: -len(suffix)] + "/api/ps"
+        base_url = generate_api_url[: -len(suffix)]
+        return f"{base_url}/api/{endpoint}"
 
-    return generate_api_url.rstrip("/") + "/../ps"
+    return generate_api_url.rstrip("/") + f"/../{endpoint}"
+
+
+def build_ps_url(generate_api_url: str) -> str:
+    """Build the Ollama process-list endpoint."""
+    return _build_api_url(generate_api_url, "ps")
+
+
+def get_ollama_version(
+    *,
+    generate_api_url: str,
+    timeout: int,
+) -> dict[str, Any]:
+    """Return Ollama server version information."""
+    return _request_json(
+        url=_build_api_url(generate_api_url, "version"),
+        timeout=timeout,
+    )
+
+
+def get_model_details(
+    *,
+    generate_api_url: str,
+    model: str,
+    timeout: int,
+) -> dict[str, Any]:
+    """Return detailed metadata for an installed Ollama model."""
+    return _request_json(
+        url=_build_api_url(generate_api_url, "show"),
+        timeout=timeout,
+        method="POST",
+        payload={"model": model},
+    )
 
 
 def detect_run_type(
@@ -65,8 +98,10 @@ def detect_run_type(
     timeout: int,
 ) -> str:
     """Return cold or warm depending on whether the model is loaded."""
-    ps_url = build_ps_url(generate_api_url)
-    response = _request_json(url=ps_url, timeout=timeout)
+    response = _request_json(
+        url=build_ps_url(generate_api_url),
+        timeout=timeout,
+    )
     loaded_models = response.get("models", [])
 
     for loaded_model in loaded_models:

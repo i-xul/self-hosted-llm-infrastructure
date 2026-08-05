@@ -27,6 +27,7 @@ def build_result_record(
     run_number: int,
     total_runs: int,
     batch_timestamp: str,
+    environment: dict[str, Any],
 ) -> dict[str, Any]:
     """Build the normalized benchmark result record."""
     tokens_per_second = calculate_tokens_per_second(result)
@@ -43,6 +44,7 @@ def build_result_record(
         "context_size": CONTEXT_SIZE,
         "temperature": TEMPERATURE,
         "seed": SEED,
+        "environment": environment,
         "prompt": prompt_text,
         "response": result.get("response", ""),
         "thinking": result.get("thinking", ""),
@@ -114,6 +116,7 @@ def build_summary_record(
         "context_size": first["context_size"],
         "temperature": first["temperature"],
         "seed": first["seed"],
+        "environment": first["environment"],
         "run_count": len(records),
         "cold_run_count": sum(
             record["run_type"] == "cold" for record in records
@@ -164,6 +167,7 @@ def build_master_summary_record(
         "context_size": first["context_size"],
         "temperature": first["temperature"],
         "seed": first["seed"],
+        "environment": first["environment"],
         "prompt_count": len(prompt_summaries),
         "total_run_count": len(records),
         "cold_run_count": sum(

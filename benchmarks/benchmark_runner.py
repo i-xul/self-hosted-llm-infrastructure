@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import Any
 
 from lib.api import DEFAULT_API_URL, call_ollama, detect_run_type
+from lib.environment import collect_environment_metadata
 from lib.prompts import list_prompt_paths, read_prompt, resolve_prompt_path
 from lib.reports import (
     write_json_result,
@@ -112,6 +113,7 @@ def run_single_benchmark(
     run_number: int,
     total_runs: int,
     batch_timestamp: str,
+    environment: dict[str, Any],
 ) -> dict[str, Any]:
     """Run and store one benchmark execution."""
     run_type = detect_run_type(
@@ -146,6 +148,7 @@ def run_single_benchmark(
         run_number=run_number,
         total_runs=total_runs,
         batch_timestamp=batch_timestamp,
+        environment=environment,
     )
 
     model_dir = RESULTS_DIR / safe_path_component(model)
@@ -182,6 +185,7 @@ def run_prompt_batch(
     api_url: str,
     timeout: int,
     batch_timestamp: str,
+    environment: dict[str, Any],
 ) -> tuple[list[dict[str, Any]], dict[str, Any]]:
     """Run all requested repetitions for one prompt."""
     prompt_text = read_prompt(prompt_path)
@@ -203,6 +207,7 @@ def run_prompt_batch(
             run_number=run_number,
             total_runs=repeat,
             batch_timestamp=batch_timestamp,
+            environment=environment,
         )
         records.append(record)
 
@@ -216,33 +221,8 @@ def run_prompt_batch(
             f"think-{think_label}_repeat-{repeat}_summary"
         )
 
-        summary_json_path = write_summary_json(summary, summary_base)
-        summary_markdown_path = write_summary_markdown(
-            summary,
-            summary_base,
-        )
-
-        stats = summary["statistics"]
-
-        print()
-        print("Prompt summary")
-        print(f"Runs: {summary['run_count']}")
-        print(f"Cold runs: {summary['cold_run_count']}")
-        print(f"Warm runs: {summary['warm_run_count']}")
-        print(
-            "Average total duration: "
-            f"{stats['total_duration_seconds']['mean']} s"
-        )
-        print(
-            "Median total duration: "
-            f"{stats['total_duration_seconds']['median']} s"
-        )
-        print(
-            "Average generation speed: "
-            f"{stats['tokens_per_second']['mean']} tokens/s"
-        )
-        print(f"Summary JSON: {summary_json_path}")
-        print(f"Summary Markdown: {summary_markdown_path}")
+        write_summary_json(summary, summary_base)
+        write_summary_markdown(summary, summary_base)
 
     return records, summary
 
@@ -256,6 +236,20 @@ def main() -> int:
         prompt_paths = select_prompt_paths(args)
         batch_timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
         think_enabled = args.think == "on"
+        environment = collect_environment_metadata(
+            generate_api_url=args.api_url,
+            model=args.model,
+            timeout=args.timeout,
+        )
+
+        print("Environment metadata collected.")
+        print(f"Python: {environment['python_version']}")
+        print(f"Ollama: {environment['ollama_version']}")
+        print(
+            "Model: "
+            f"{environment['model']['parameter_size']} "
+            f"{environment['model']['quantization_level']}"
+        )
 
         all_records: list[dict[str, Any]] = []
         prompt_summaries: list[dict[str, Any]] = []
@@ -269,6 +263,7 @@ def main() -> int:
                 api_url=args.api_url,
                 timeout=args.timeout,
                 batch_timestamp=batch_timestamp,
+                environment=environment,
             )
             all_records.extend(records)
             prompt_summaries.append(summary)
@@ -286,35 +281,8 @@ def main() -> int:
                 f"think-{think_label}_repeat-{args.repeat}_master-summary"
             )
 
-            master_json_path = write_master_summary_json(
-                master_summary,
-                master_base,
-            )
-            master_markdown_path = write_master_summary_markdown(
-                master_summary,
-                master_base,
-            )
-
-            stats = master_summary["statistics"]
-
-            print()
-            print("=" * 72)
-            print("Master benchmark summary")
-            print("=" * 72)
-            print(f"Prompts: {master_summary['prompt_count']}")
-            print(f"Total runs: {master_summary['total_run_count']}")
-            print(f"Cold runs: {master_summary['cold_run_count']}")
-            print(f"Warm runs: {master_summary['warm_run_count']}")
-            print(
-                "Average total duration: "
-                f"{stats['total_duration_seconds']['mean']} s"
-            )
-            print(
-                "Average generation speed: "
-                f"{stats['tokens_per_second']['mean']} tokens/s"
-            )
-            print(f"Master summary JSON: {master_json_path}")
-            print(f"Master summary Markdown: {master_markdown_path}")
+            write_master_summary_json(master_summary, master_base)
+            write_master_summary_markdown(master_summary, master_base)
 
         return 0
 
