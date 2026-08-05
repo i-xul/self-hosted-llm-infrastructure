@@ -46,6 +46,7 @@ def write_markdown_result(
         f'| Timestamp | `{record["benchmark_timestamp"]}` |\n'
         f'| Model | `{record["model"]}` |\n'
         f'| Prompt | `{record["prompt_name"]}` |\n'
+        f'| Run type | `{record["run_type"]}` |\n'
         f"| Thinking | `{thinking_label}` |\n"
         f'| Context size | `{record["context_size"]}` |\n'
         f'| Temperature | `{record["temperature"]}` |\n'

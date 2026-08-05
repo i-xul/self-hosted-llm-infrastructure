@@ -19,6 +19,7 @@ def build_result_record(
     prompt_text: str,
     model: str,
     think_enabled: bool,
+    run_type: str,
 ) -> dict[str, Any]:
     """Build the normalized benchmark result record."""
     tokens_per_second = calculate_tokens_per_second(result)
@@ -28,6 +29,7 @@ def build_result_record(
         "prompt_name": prompt_name,
         "model": model,
         "think_enabled": think_enabled,
+        "run_type": run_type,
         "context_size": CONTEXT_SIZE,
         "temperature": TEMPERATURE,
         "seed": SEED,

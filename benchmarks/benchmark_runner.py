@@ -7,7 +7,7 @@ import json
 import sys
 from datetime import datetime
 
-from lib.api import DEFAULT_API_URL, call_ollama
+from lib.api import DEFAULT_API_URL, call_ollama, detect_run_type
 from lib.prompts import read_prompt, resolve_prompt_path
 from lib.reports import write_json_result, write_markdown_result
 from lib.results import build_result_record
@@ -57,10 +57,16 @@ def main() -> int:
     try:
         prompt_path = resolve_prompt_path(args.prompt)
         prompt_text = read_prompt(prompt_path)
+        run_type = detect_run_type(
+            generate_api_url=args.api_url,
+            model=args.model,
+            timeout=args.timeout,
+        )
 
         print(f"Model: {args.model}")
         print(f"Prompt: {prompt_path.name}")
         print(f"Thinking: {args.think}")
+        print(f"Run type: {run_type}")
         print("Running benchmark...")
 
         result = call_ollama(
@@ -77,13 +83,14 @@ def main() -> int:
             prompt_text=prompt_text,
             model=args.model,
             think_enabled=args.think == "on",
+            run_type=run_type,
         )
 
         timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
         model_dir = RESULTS_DIR / safe_path_component(args.model)
         model_dir.mkdir(parents=True, exist_ok=True)
         output_base = model_dir / (
-            f"{timestamp}_{prompt_path.stem}_think-{args.think}"
+            f"{timestamp}_{prompt_path.stem}_think-{args.think}_{run_type}"
         )
 
         json_path = write_json_result(record, output_base)
@@ -93,6 +100,7 @@ def main() -> int:
 
         print()
         print("Benchmark completed.")
+        print(f"Run type: {run_type}")
         print(f"Total duration: {metrics['total_duration_seconds']} s")
         print(f"Generated tokens: {metrics['eval_count']}")
         print(f"Generation speed: {metrics['tokens_per_second']} tokens/s")
