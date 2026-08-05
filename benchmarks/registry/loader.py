@@ -9,20 +9,20 @@
 #
 # File: benchmarks/registry/loader.py
 # Created: 2026-08-06
-# Version: v0.2.0
+# Version: v0.3.0
 #
 # Purpose:
-# Load and validate the version-controlled model registry JSON file.
+# Load and validate persistent model metadata from models.json.
 #
 # Workflow:
 # 1. Locate models.json.
 # 2. Read and decode JSON.
-# 3. Validate required model fields.
+# 3. Validate required persistent model fields.
 # 4. Return a normalized registry object.
 #
 # ----------------------------------------------------------------------
 
-"""Load and validate the local LLM model registry."""
+"""Load and validate persistent model registry metadata."""
 
 from __future__ import annotations
 
@@ -45,16 +45,6 @@ REGISTRY_PATH = Path(__file__).resolve().parent / "models.json"
 def _read_json(path: Path) -> dict[str, Any]:
     """
     Read and decode the registry JSON file.
-
-    Args:
-        path: Path to the registry JSON file.
-
-    Returns:
-        Parsed top-level JSON object.
-
-    Raises:
-        FileNotFoundError: If the registry file does not exist.
-        ValueError: If the file contains invalid JSON or a non-object root.
     """
 
     if not path.is_file():
@@ -79,15 +69,15 @@ def _normalize_model(
     model: Any,
     *,
     index: int,
-) -> dict[str, Any]:
+) -> dict[str, str]:
     """
-    Validate and normalize one model registry entry.
+    Validate one persistent model metadata entry.
     """
 
     if not isinstance(model, dict):
         raise ValueError(f"Model entry {index} must be a JSON object.")
 
-    normalized: dict[str, Any] = {}
+    normalized: dict[str, str] = {}
 
     for field in ("name", "display_name", "family"):
         value = model.get(field)
@@ -99,14 +89,6 @@ def _normalize_model(
 
         normalized[field] = value.strip()
 
-    benchmarked = model.get("benchmarked")
-
-    if not isinstance(benchmarked, bool):
-        raise ValueError(
-            f"Model entry {index} field 'benchmarked' must be true or false."
-        )
-
-    normalized["benchmarked"] = benchmarked
     return normalized
 
 
@@ -118,7 +100,7 @@ def load_registry(
     path: Path = REGISTRY_PATH,
 ) -> dict[str, Any]:
     """
-    Load and normalize the complete model registry.
+    Load and normalize the complete persistent model registry.
     """
 
     data = _read_json(path)

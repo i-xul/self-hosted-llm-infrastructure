@@ -9,20 +9,21 @@
 #
 # File: benchmarks/registry/output.py
 # Created: 2026-08-06
-# Version: v0.2.0
+# Version: v0.3.0
 #
 # Purpose:
-# Compare registered and installed model records and print a
-# human-readable terminal status report.
+# Compare persistent registry entries, installed Ollama models,
+# and automatically detected benchmark results.
 #
 # Workflow:
-# 1. Index registered and installed models by name.
-# 2. Identify matched, missing, and unregistered models.
-# 3. Print counts and detailed model groups.
+# 1. Index registry and installed models by name.
+# 2. Calculate installed and benchmark status.
+# 3. Identify missing and unregistered models.
+# 4. Print a complete terminal report.
 #
 # ----------------------------------------------------------------------
 
-"""Terminal output formatting for the local LLM model registry."""
+"""Terminal output for the local LLM model registry."""
 
 from __future__ import annotations
 
@@ -30,13 +31,13 @@ from typing import Any
 
 
 # =============================================================================
-# Shared sorting and formatting
+# Shared output helpers
 # =============================================================================
 
 def _sort_by_name(
     models: list[dict[str, Any]],
     *,
-    field: str = "name",
+    field: str,
 ) -> list[dict[str, Any]]:
     """
     Sort model records by a selected string field.
@@ -48,14 +49,31 @@ def _sort_by_name(
     )
 
 
-def _print_registered_group(
+def _status_label(
+    *,
+    installed: bool,
+    benchmarked: bool,
+) -> str:
+    """
+    Build a concise installed and benchmark status label.
+    """
+
+    installation = "installed" if installed else "not installed"
+    benchmark = "benchmarked" if benchmarked else "waiting for benchmark"
+
+    return f"{installation}, {benchmark}"
+
+
+def _print_registry_group(
     title: str,
     models: list[dict[str, Any]],
     *,
+    installed_names: set[str],
+    benchmarked_names: set[str],
     marker: str,
 ) -> None:
     """
-    Print one group of version-controlled registry entries.
+    Print one group of persistent registry entries.
     """
 
     print(title)
@@ -67,16 +85,12 @@ def _print_registered_group(
         return
 
     for model in _sort_by_name(models, field="display_name"):
-        benchmark_status = (
-            "benchmarked"
-            if model["benchmarked"]
-            else "waiting for benchmark"
-        )
+        name = model["name"]
 
         print(
             f"{marker} {model['display_name']} "
-            f"({model['name']}, family={model['family']}, "
-            f"{benchmark_status})"
+            f"({name}, family={model['family']}, "
+            f"{_status_label(installed=name in installed_names, benchmarked=name in benchmarked_names)})"
         )
 
     print()
@@ -85,11 +99,9 @@ def _print_registered_group(
 def _print_installed_group(
     title: str,
     models: list[dict[str, Any]],
-    *,
-    marker: str,
 ) -> None:
     """
-    Print one group of installed Ollama model records.
+    Print installed Ollama models missing from the persistent registry.
     """
 
     print(title)
@@ -100,9 +112,9 @@ def _print_installed_group(
         print()
         return
 
-    for model in _sort_by_name(models):
+    for model in _sort_by_name(models, field="name"):
         print(
-            f"{marker} {model['name']} "
+            f"[?] {model['name']} "
             f"(id={model['id']}, size={model['size']})"
         )
 
@@ -110,16 +122,17 @@ def _print_installed_group(
 
 
 # =============================================================================
-# Registry and installed-model comparison
+# Complete registry comparison
 # =============================================================================
 
 def print_registry_summary(
     *,
     registry: dict[str, Any],
     installed_models: list[dict[str, Any]],
+    benchmarked_models: set[str],
 ) -> None:
     """
-    Compare registry and Ollama data, then print the complete status report.
+    Print the complete registry, installation, and benchmark status report.
     """
 
     registered_models = registry["models"]
@@ -137,31 +150,29 @@ def print_registry_summary(
     registered_names = set(registered_by_name)
     installed_names = set(installed_by_name)
 
-    matched = [
+    registered_and_installed = [
         registered_by_name[name]
         for name in registered_names & installed_names
     ]
 
-    missing_from_ollama = [
+    registered_not_installed = [
         registered_by_name[name]
         for name in registered_names - installed_names
     ]
 
-    unregistered_installed = [
+    installed_not_registered = [
         installed_by_name[name]
         for name in installed_names - registered_names
     ]
 
-    benchmarked = [
-        model
-        for model in registered_models
-        if model["benchmarked"]
+    benchmarked_registered = [
+        registered_by_name[name]
+        for name in registered_names & benchmarked_models
     ]
 
-    pending = [
-        model
-        for model in registered_models
-        if not model["benchmarked"]
+    waiting_for_benchmark = [
+        registered_by_name[name]
+        for name in registered_names - benchmarked_models
     ]
 
     print("Local LLM Model Registry")
@@ -170,33 +181,38 @@ def print_registry_summary(
     print(f"Schema version: {registry['schema_version']}")
     print(f"Registered models: {len(registered_models)}")
     print(f"Installed Ollama models: {len(installed_models)}")
-    print(f"Registered and installed: {len(matched)}")
-    print(f"Registered but not installed: {len(missing_from_ollama)}")
-    print(f"Installed but not registered: {len(unregistered_installed)}")
-    print(f"Benchmarked registry entries: {len(benchmarked)}")
-    print(f"Waiting for benchmark: {len(pending)}")
+    print(f"Registered and installed: {len(registered_and_installed)}")
+    print(f"Registered but not installed: {len(registered_not_installed)}")
+    print(f"Installed but not registered: {len(installed_not_registered)}")
+    print(f"Benchmarked registry entries: {len(benchmarked_registered)}")
+    print(f"Waiting for benchmark: {len(waiting_for_benchmark)}")
     print()
 
-    _print_registered_group(
+    _print_registry_group(
         "Registered and installed",
-        matched,
+        registered_and_installed,
+        installed_names=installed_names,
+        benchmarked_names=benchmarked_models,
         marker="[x]",
     )
 
-    _print_registered_group(
+    _print_registry_group(
         "Registered but not installed",
-        missing_from_ollama,
+        registered_not_installed,
+        installed_names=installed_names,
+        benchmarked_names=benchmarked_models,
         marker="[!]",
     )
 
     _print_installed_group(
         "Installed but not registered",
-        unregistered_installed,
-        marker="[?]",
+        installed_not_registered,
     )
 
-    _print_registered_group(
+    _print_registry_group(
         "Waiting for benchmark",
-        pending,
+        waiting_for_benchmark,
+        installed_names=installed_names,
+        benchmarked_names=benchmarked_models,
         marker="[ ]",
     )

@@ -9,16 +9,15 @@
 #
 # File: benchmarks/registry/ollama.py
 # Created: 2026-08-06
-# Version: v0.2.0
+# Version: v0.3.0
 #
 # Purpose:
-# Read the models currently installed in the local Ollama
-# environment by parsing the ollama list command output.
+# Read models currently installed in the local Ollama environment.
 #
 # Workflow:
-# 1. Run ollama list without invoking a shell.
-# 2. Validate successful command execution.
-# 3. Parse installed model names, IDs, and sizes.
+# 1. Run ollama list.
+# 2. Validate command execution.
+# 3. Parse model name, ID, and size.
 # 4. Return normalized installed-model records.
 #
 # ----------------------------------------------------------------------
@@ -38,9 +37,6 @@ from typing import Any
 def _run_ollama_list() -> str:
     """
     Run ollama list and return its standard output.
-
-    Raises:
-        RuntimeError: If Ollama is unavailable or the command fails.
     """
 
     try:
@@ -67,21 +63,12 @@ def _run_ollama_list() -> str:
 
 
 # =============================================================================
-# Ollama list output parsing
+# Ollama list parsing
 # =============================================================================
 
 def parse_ollama_list(output: str) -> list[dict[str, Any]]:
     """
-    Parse model records from ollama list terminal output.
-
-    The parser treats the first whitespace-separated column as the model name,
-    the second as the model ID, and combines the next two columns as the size.
-
-    Args:
-        output: Raw standard output from ollama list.
-
-    Returns:
-        Installed model records sorted by model name.
+    Parse installed model records from ollama list output.
     """
 
     lines = [
@@ -93,10 +80,9 @@ def parse_ollama_list(output: str) -> list[dict[str, Any]]:
     if not lines:
         return []
 
-    data_lines = lines[1:]
     models: list[dict[str, Any]] = []
 
-    for line in data_lines:
+    for line in lines[1:]:
         parts = line.split()
 
         if len(parts) < 4:
@@ -120,7 +106,7 @@ def parse_ollama_list(output: str) -> list[dict[str, Any]]:
 
 def load_installed_models() -> list[dict[str, Any]]:
     """
-    Return models currently installed in the local Ollama environment.
+    Return models currently installed in Ollama.
     """
 
     return parse_ollama_list(_run_ollama_list())

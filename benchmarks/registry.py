@@ -9,22 +9,23 @@
 #
 # File: benchmarks/registry.py
 # Created: 2026-08-06
-# Version: v0.2.0
+# Version: v0.3.0
 #
 # Purpose:
-# Compare the version-controlled model registry with models
-# currently installed in the local Ollama environment.
+# Compare the model registry, installed Ollama models, and
+# automatically detected benchmark result status.
 #
 # Workflow:
 # 1. Load and validate models.json.
 # 2. Read installed models from ollama list.
-# 3. Compare registered and installed model names.
-# 4. Print a human-readable registry status report.
+# 3. Detect benchmarked models from result summaries.
+# 4. Print a combined registry status report.
 #
 # ----------------------------------------------------------------------
 
 """Command-line entry point for the local LLM model registry."""
 
+from registry.benchmarks import detect_benchmarked_models
 from registry.loader import load_registry
 from registry.ollama import load_installed_models
 from registry.output import print_registry_summary
@@ -36,7 +37,7 @@ from registry.output import print_registry_summary
 
 def main() -> int:
     """
-    Load registry and Ollama data, then print their current relationship.
+    Load registry, Ollama, and benchmark result data.
 
     Returns:
         int: Process exit code. Zero indicates success.
@@ -45,10 +46,12 @@ def main() -> int:
     try:
         registry = load_registry()
         installed_models = load_installed_models()
+        benchmarked_models = detect_benchmarked_models()
 
         print_registry_summary(
             registry=registry,
             installed_models=installed_models,
+            benchmarked_models=benchmarked_models,
         )
 
         return 0
