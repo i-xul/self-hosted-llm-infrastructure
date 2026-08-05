@@ -1,0 +1,44 @@
+{
+  "benchmark_timestamp": "2026-08-05T20:57:54.716303+03:00",
+  "batch_timestamp": "20260805-205522",
+  "run_number": 1,
+  "total_runs": 1,
+  "prompt_name": "networking.md",
+  "model": "gemma3:12b",
+  "think_enabled": false,
+  "run_type": "warm",
+  "context_size": 4096,
+  "temperature": 0,
+  "seed": 42,
+  "environment": {
+    "operating_system": "Windows-11-10.0.26200-SP0",
+    "python_version": "3.13.14",
+    "python_implementation": "CPython",
+    "machine_architecture": "AMD64",
+    "ollama_version": "0.32.5",
+    "model": {
+      "name": "gemma3:12b",
+      "format": "gguf",
+      "family": "gemma3",
+      "families": [
+        "gemma3"
+      ],
+      "parameter_size": "12.2B",
+      "quantization_level": "Q4_K_M",
+      "context_length": 131072
+    }
+  },
+  "prompt": "Explain the difference between a router, a managed Ethernet switch and a wireless access point.\n\nDescribe the role of each device in a small home network and give a practical example of how they can be connected together.",
+  "response": "Okay, let's break down routers, managed Ethernet switches, and wireless access points (WAPs), their roles in a home network, and how they connect.  I'll aim for clarity without getting *too* technical.\n\n**1. Router: The Network Gatekeeper & Traffic Director**\n\n* **What it does:** A router is the central hub of your home network. Its primary job is to connect your home network (your devices) to the internet and manage traffic between them. Think of it as a postal service for data packets.\n    * **Connects to the Internet:** It has a WAN (Wide Area Network) port that connects to your modem (cable, DSL, fiber).  The modem brings the internet signal into your home.\n    * **Assigns IP Addresses (DHCP):** The router acts as a DHCP server, automatically assigning unique private IP addresses to all devices connected to it (computers, phones, smart TVs, etc.). This allows them to communicate with each other and the internet.  (e.g., 192.168.1.100, 192.168.1.101)\n    * **Network Address Translation (NAT):** NAT hides your internal network's IP addresses from the outside world. This adds a layer of security and allows multiple devices to share a single public IP address provided by your ISP.\n    * **Routing:**  It determines the best path for data packets to travel, both within your home network and between your network and the internet.\n    * **Basic Firewall:** Most routers have a built-in firewall that provides basic protection against unauthorized access from the internet.\n\n* **Role in Home Network:** The router is *essential*. Without it, you can't connect to the internet or easily share resources (like printers) between devices on your home network.\n* **Example:** Your ISP gives you a public IP address like 203.0.113.5.  Your router takes that and assigns private IPs to all your devices. When your laptop requests a webpage, the request goes through the router, which uses NAT to make it appear as if the request is coming from the router's public IP (203.0.113.5).\n\n**2. Managed Ethernet Switch: The Local Traffic Controller (for Wired Connections)**\n\n* **What it does:** An Ethernet switch provides more ports for wired devices to connect to your network than a typical home router might offer.  A *managed* switch goes further, offering advanced control and features.\n    * **More Ports:** If you have lots of wired devices (gaming consoles, desktop computers, smart home hubs), a switch expands the number of available connections.\n    * **VLANs (Virtual LANs):** Managed switches allow you to segment your network into different virtual networks. This can improve security and performance by isolating traffic.  For example, you could put IoT devices on one VLAN and your computers on another.\n    * **QoS (Quality of Service):** You can prioritize certain types of traffic (e.g., video conferencing) over others (e.g., file downloads). This ensures a smoother experience for critical applications.\n    * **Port Mirroring:**  Allows you to copy traffic from one port to another, useful for troubleshooting or security monitoring.\n    * **Link Aggregation (LAG/Bonding):** Combine multiple ports into a single logical connection, increasing bandwidth and redundancy.\n\n* **Role in Home Network:** A managed switch is *optional* but valuable if you need more wired connections, want greater control over your network traffic, or have specific security requirements.  Most home users won't need one, but power users or those with complex setups will find them beneficial.\n* **Example:** You have 4 computers and a smart TV, but your router only has 3 Ethernet ports. A managed switch provides the extra port you need for the TV.  You might also use VLANs to isolate your security cameras from the rest of your network.\n\n**3. Wireless Access Point (WAP): The Wi-Fi Broadcaster**\n\n* **What it does:** A WAP's sole purpose is to provide wireless connectivity (Wi-Fi) to devices. It connects to your wired network (usually through an Ethernet cable connected to a router or switch).\n    * **Extends Wireless Range:**  You can place WAPs in different locations to extend Wi-Fi coverage throughout your home, especially if the router's signal isn’t strong enough everywhere.\n    * **Dedicated Wi-Fi:** A dedicated WAP can often provide better Wi-Fi performance than a combined router/WAP unit because it focuses solely on wireless duties.\n    * **Multiple SSIDs (Service Set Identifiers):**  You can create different Wi-Fi networks with different security settings (e.g., one for guests, one for your personal devices).\n\n* **Role in Home Network:** A WAP is *optional* but useful if you need to improve Wi-Fi coverage or performance. Many home routers have a built-in WAP, so you might not need a separate device unless you want better range or more control over your wireless network.\n* **Example:** Your router is on the second floor, and the Wi-Fi signal is weak in the basement. You place a WAP in the basement connected to an Ethernet cable running from the router (or switch). This provides strong Wi-Fi coverage in the basement.\n\n\n\n**How They Connect Together: A Practical Example**\n\nLet's say you have a moderately sized home with several devices and want good performance and some control over your network. Here’s how they might be connected:\n\n1. **Modem:**  Connects to your ISP (cable, DSL, fiber).\n2. **Router:** Connects to the modem via an Ethernet cable. The router provides internet access, assigns IP addresses, and handles NAT. It also has a built-in WAP for basic Wi-Fi coverage.\n3. **Managed Switch:**  Connects to one of the LAN ports on the router via an Ethernet cable. This expands the number of wired connections available.\n4. **Wireless Access Point (WAP):** Connects to one of the ports on the managed switch via an Ethernet cable. The WAP extends Wi-Fi coverage to areas where the router's signal is weak.\n\n**Diagram:**\n\n```\n[Internet] --> [Modem] --> [Router] --(Ethernet)--> [Managed Switch] --(Ethernet)--> [WAP]\n                                  |\n                                  +--(Ethernet)--> Desktop Computer 1\n                                  |\n                                  +--(Ethernet)--> Smart TV\n                                  |\n                                  +--(Wireless)--> Laptops, Phones, Tablets (via Router's WAP)\n```\n\n**Key Takeaways:**\n\n* **Router = Internet Access & Network Management.**  Essential.\n* **Managed Switch = More Wired Ports & Advanced Control.** Optional but powerful for advanced users.\n* **WAP = Wi-Fi Extension & Performance.** Optional, especially if your router has a decent built-in WAP.\n\n\n\nDo you want me to elaborate on any of these devices or their functions? Perhaps discuss specific features or brands?",
+  "thinking": "",
+  "done_reason": "stop",
+  "metrics": {
+    "total_duration_seconds": 33.49,
+    "load_duration_seconds": 0.332,
+    "prompt_eval_count": 52,
+    "prompt_eval_duration_seconds": 0.108,
+    "eval_count": 1531,
+    "eval_duration_seconds": 32.929,
+    "tokens_per_second": 46.49
+  }
+}

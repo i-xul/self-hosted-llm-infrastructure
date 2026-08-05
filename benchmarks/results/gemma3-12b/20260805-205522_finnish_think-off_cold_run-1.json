@@ -1,0 +1,44 @@
+{
+  "benchmark_timestamp": "2026-08-05T20:56:35.215753+03:00",
+  "batch_timestamp": "20260805-205522",
+  "run_number": 1,
+  "total_runs": 1,
+  "prompt_name": "finnish.md",
+  "model": "gemma3:12b",
+  "think_enabled": false,
+  "run_type": "cold",
+  "context_size": 4096,
+  "temperature": 0,
+  "seed": 42,
+  "environment": {
+    "operating_system": "Windows-11-10.0.26200-SP0",
+    "python_version": "3.13.14",
+    "python_implementation": "CPython",
+    "machine_architecture": "AMD64",
+    "ollama_version": "0.32.5",
+    "model": {
+      "name": "gemma3:12b",
+      "format": "gguf",
+      "family": "gemma3",
+      "families": [
+        "gemma3"
+      ],
+      "parameter_size": "12.2B",
+      "quantization_level": "Q4_K_M",
+      "context_length": 131072
+    }
+  },
+  "prompt": "Vastaa suomeksi.\n\nSelitä noin 150 sanalla, mikä Raspberry Pi on, mihin sitä käytetään ja miksi se on suosittu harrastajien keskuudessa.\n\nKäytä luonnollista ja selkeää yleiskieltä.",
+  "response": "Raspberry Pi on pienikokoinen tietokone, joka on suunniteltu opettamaan ohjelmointia ja tekemään elektroniikkaharrastuksesta helpompaa. Se on kooltaan luottokortin kokoinen ja sen hinta on yleensä alle 50 euroa.\n\nRaspberry Piä voi käyttää moniin eri tarkoituksiin: esimerkiksi mediasenterinä, retro-pelikonsolina, kotiautomaatiojärjestelmänä tai jopa pienoisena palvelimena. Sen avulla voi kokeilla ohjelmointia, oppia elektroniikkaa ja rakentaa omia projekteja, kuten robotiikkaa tai älykkäitä laitteita.\n\nHarrastajien keskuudessa Raspberry Pi on erittäin suosittu sen edullisen hinnan, monipuolisuuden ja helppokäyttöisyyden ansiosta. Se tarjoaa loistavan alustan luovuudelle ja kokeilulle ilman suurta taloudellista riskiä. Laaja yhteisö tukee Raspberry Pi -harrastajia jakamalla tietoa, ohjeita ja valmiita projekteja.",
+  "thinking": "",
+  "done_reason": "stop",
+  "metrics": {
+    "total_duration_seconds": 64.307,
+    "load_duration_seconds": 58.649,
+    "prompt_eval_count": 74,
+    "prompt_eval_duration_seconds": 0.19,
+    "eval_count": 263,
+    "eval_duration_seconds": 5.467,
+    "tokens_per_second": 48.11
+  }
+}

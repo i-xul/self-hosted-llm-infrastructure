@@ -1,0 +1,44 @@
+{
+  "benchmark_timestamp": "2026-08-05T20:59:19.567989+03:00",
+  "batch_timestamp": "20260805-205522",
+  "run_number": 1,
+  "total_runs": 1,
+  "prompt_name": "reasoning.md",
+  "model": "gemma3:12b",
+  "think_enabled": false,
+  "run_type": "warm",
+  "context_size": 4096,
+  "temperature": 0,
+  "seed": 42,
+  "environment": {
+    "operating_system": "Windows-11-10.0.26200-SP0",
+    "python_version": "3.13.14",
+    "python_implementation": "CPython",
+    "machine_architecture": "AMD64",
+    "ollama_version": "0.32.5",
+    "model": {
+      "name": "gemma3:12b",
+      "format": "gguf",
+      "family": "gemma3",
+      "families": [
+        "gemma3"
+      ],
+      "parameter_size": "12.2B",
+      "quantization_level": "Q4_K_M",
+      "context_length": 131072
+    }
+  },
+  "prompt": "A server has three storage drives:\n\n- Drive A: 2 TB, 80% full\n- Drive B: 4 TB, 55% full\n- Drive C: 8 TB, 25% full\n\nA backup requires 3.5 TB of free space on a single drive.\n\nDetermine which drives can store the backup.\n\nShow the calculations clearly and give a concise final answer.",
+  "response": "Here's the breakdown to determine which drives can store the backup:\n\n**1. Calculate Free Space for Each Drive:**\n\n*   **Drive A:**\n    *   Total Capacity: 2 TB\n    *   Used Space: 2 TB * 80% = 1.6 TB\n    *   Free Space: 2 TB - 1.6 TB = 0.4 TB\n*   **Drive B:**\n    *   Total Capacity: 4 TB\n    *   Used Space: 4 TB * 55% = 2.2 TB\n    *   Free Space: 4 TB - 2.2 TB = 1.8 TB\n*   **Drive C:**\n    *   Total Capacity: 8 TB\n    *   Used Space: 8 TB * 25% = 2 TB\n    *   Free Space: 8 TB - 2 TB = 6 TB\n\n**2. Compare Free Space to Backup Requirement:**\n\nThe backup requires 3.5 TB of free space.\n\n*   Drive A: 0.4 TB (Not enough)\n*   Drive B: 1.8 TB (Not enough)\n*   Drive C: 6 TB (Enough)\n\n\n\n**Final Answer:** Only **Drive C** has sufficient free space to store the backup.",
+  "thinking": "",
+  "done_reason": "stop",
+  "metrics": {
+    "total_duration_seconds": 6.508,
+    "load_duration_seconds": 0.345,
+    "prompt_eval_count": 97,
+    "prompt_eval_duration_seconds": 0.146,
+    "eval_count": 285,
+    "eval_duration_seconds": 5.894,
+    "tokens_per_second": 48.35
+  }
+}
