@@ -1,0 +1,44 @@
+{
+  "benchmark_timestamp": "2026-08-05T23:41:12.160475+03:00",
+  "batch_timestamp": "20260805-233936",
+  "run_number": 1,
+  "total_runs": 1,
+  "prompt_name": "raspberry-pi.md",
+  "model": "llama3.1:8b",
+  "think_enabled": false,
+  "run_type": "warm",
+  "context_size": 4096,
+  "temperature": 0,
+  "seed": 42,
+  "environment": {
+    "operating_system": "Windows-11-10.0.26200-SP0",
+    "python_version": "3.13.14",
+    "python_implementation": "CPython",
+    "machine_architecture": "AMD64",
+    "ollama_version": "0.32.5",
+    "model": {
+      "name": "llama3.1:8b",
+      "format": "gguf",
+      "family": "llama",
+      "families": [
+        "llama"
+      ],
+      "parameter_size": "8.0B",
+      "quantization_level": "Q4_K_M",
+      "context_length": 131072
+    }
+  },
+  "prompt": "A Raspberry Pi runs several self-hosted services and is accessible only through the local network and a private VPN.\n\nSuggest a practical monitoring plan for:\n\n- CPU temperature\n- CPU load\n- memory usage\n- disk usage\n- service availability\n- failed SSH login attempts\n\nPrefer lightweight tools suitable for a Raspberry Pi.",
+  "response": "Here's a practical monitoring plan for your Raspberry Pi, using lightweight tools that are suitable for the device.\n\n**Monitoring Tools:**\n\n1. **Prometheus**: A popular monitoring system that collects metrics from various sources.\n2. **Grafana**: A visualization tool that displays metrics collected by Prometheus.\n3. **Cron**: A job scheduler to run scripts at regular intervals.\n4. **SSH keys and fail2ban**: To monitor failed SSH login attempts.\n\n**Monitoring Plan:**\n\n1. **CPU Temperature:**\n\t* Install `lm-sensors` package on the Raspberry Pi (e.g., `sudo apt-get install lm-sensors`).\n\t* Configure `lm-sensors` to collect temperature data (e.g., `sudo sensors-detect`).\n\t* Create a Prometheus scrape job to collect CPU temperature metrics.\n2. **CPU Load:**\n\t* Install `prometheus-node-exporter` package on the Raspberry Pi (e.g., `sudo apt-get install prometheus-node-exporter`).\n\t* Configure `prometheus-node-exporter` to collect CPU load metrics.\n3. **Memory Usage:**\n\t* Create a Prometheus scrape job to collect memory usage metrics using `prometheus-node-exporter`.\n4. **Disk Usage:**\n\t* Install `df` package on the Raspberry Pi (e.g., `sudo apt-get install df`).\n\t* Create a script that runs at regular intervals (e.g., every 5 minutes) to collect disk usage data and send it to Prometheus.\n5. **Service Availability:**\n\t* Use `systemctl` or `service` commands to monitor service status.\n\t* Create a script that runs at regular intervals to check service availability and send alerts to Prometheus.\n6. **Failed SSH Login Attempts:**\n\t* Install `fail2ban` package on the Raspberry Pi (e.g., `sudo apt-get install fail2ban`).\n\t* Configure `fail2ban` to monitor failed SSH login attempts.\n\n**Prometheus Configuration:**\n\n1. Create a `prometheus.yml` file with the following configuration:\n```yaml\nglobal:\n  scrape_interval: 10s\n\nscrape_configs:\n  - job_name: 'node'\n    static_configs:\n      - targets: ['localhost:9100']\n```\n2. Start Prometheus service (e.g., `sudo systemctl start prometheus`).\n\n**Grafana Configuration:**\n\n1. Install Grafana package on the Raspberry Pi (e.g., `sudo apt-get install grafana-server`).\n2. Configure Grafana to connect to Prometheus instance.\n3. Create dashboards for each metric type (e.g., CPU temperature, CPU load, memory usage, disk usage).\n\n**Cron Jobs:**\n\n1. Create a script that runs at regular intervals (e.g., every 5 minutes) to collect disk usage data and send it to Prometheus:\n```bash\n#!/bin/bash\n\ndf -h | awk '{print $5}' > /tmp/disk_usage.txt\ncurl -X POST \\\n  http://localhost:9091/api/v1/write \\\n  -H 'Content-Type: application/json' \\\n  -d '{\"metric\": \"disk_usage\", \"value\": \"$(cat /tmp/disk_usage.txt)\"}'\n```\n2. Create a script that runs at regular intervals to check service availability and send alerts to Prometheus:\n```bash\n#!/bin/bash\n\nservices=$(systemctl list-units --type=service)\nfor service in $services; do\n  if [ $(systemctl status $service | grep -c \"active (running)\") -eq 0 ]; then\n    curl -X POST \\\n      http://localhost:9091/api/v1/alerts \\\n      -H 'Content-Type: application/json' \\\n      -d '{\"alert\": \"Service $service is not running\"}'\n  fi\ndone\n```\nThis monitoring plan provides a basic setup for collecting and visualizing metrics on your Raspberry Pi. You can customize the configuration to suit your specific needs.\n\n**Note:** This is just a starting point, and you may need to adjust the configuration based on your specific use case. Additionally, this plan assumes that Prometheus and Grafana are installed on the same device as the Raspberry Pi; if they are not, you will need to modify the configuration accordingly.",
+  "thinking": "",
+  "done_reason": "stop",
+  "metrics": {
+    "total_duration_seconds": 11.535,
+    "load_duration_seconds": 0.158,
+    "prompt_eval_count": 76,
+    "prompt_eval_duration_seconds": 0.07,
+    "eval_count": 879,
+    "eval_duration_seconds": 11.279,
+    "tokens_per_second": 77.93
+  }
+}

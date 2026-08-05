@@ -1,0 +1,44 @@
+{
+  "benchmark_timestamp": "2026-08-05T23:40:20.327657+03:00",
+  "batch_timestamp": "20260805-233936",
+  "run_number": 1,
+  "total_runs": 1,
+  "prompt_name": "finnish.md",
+  "model": "llama3.1:8b",
+  "think_enabled": false,
+  "run_type": "cold",
+  "context_size": 4096,
+  "temperature": 0,
+  "seed": 42,
+  "environment": {
+    "operating_system": "Windows-11-10.0.26200-SP0",
+    "python_version": "3.13.14",
+    "python_implementation": "CPython",
+    "machine_architecture": "AMD64",
+    "ollama_version": "0.32.5",
+    "model": {
+      "name": "llama3.1:8b",
+      "format": "gguf",
+      "family": "llama",
+      "families": [
+        "llama"
+      ],
+      "parameter_size": "8.0B",
+      "quantization_level": "Q4_K_M",
+      "context_length": 131072
+    }
+  },
+  "prompt": "Vastaa suomeksi.\n\nSelitä noin 150 sanalla, mikä Raspberry Pi on, mihin sitä käytetään ja miksi se on suosittu harrastajien keskuudessa.\n\nKäytä luonnollista ja selkeää yleiskieltä.",
+  "response": "Raspberry Pi on pieni tietokone, joka on suunniteltu opetukseen ja harrastamiseen. Se on noin 10 senttimetrin kokoisena laitteena, jolla voi tehdä monia asioita, kuten ohjelmoida, pelata ja katsoa videoita.\n\nRaspberry Piä käytetään opetukseen, koska se on halpa ja helppokäyttöinen. Se on myös hyvä laite oppia tietokoneiden perusteista. Harrastajat ovat suosineet Raspberry Piä sen helppouden vuoksi.\n\nRaspberry Pi on myös hyvin soveltuva laite, jolla voi tehdä monenlaisia projekteja, kuten automaattisia valo- ja ääniohjelmia.",
+  "thinking": "",
+  "done_reason": "stop",
+  "metrics": {
+    "total_duration_seconds": 35.187,
+    "load_duration_seconds": 32.577,
+    "prompt_eval_count": 79,
+    "prompt_eval_duration_seconds": 0.121,
+    "eval_count": 195,
+    "eval_duration_seconds": 2.487,
+    "tokens_per_second": 78.4
+  }
+}

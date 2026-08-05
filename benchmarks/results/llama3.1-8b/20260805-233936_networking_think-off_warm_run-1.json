@@ -1,0 +1,44 @@
+{
+  "benchmark_timestamp": "2026-08-05T23:40:44.867329+03:00",
+  "batch_timestamp": "20260805-233936",
+  "run_number": 1,
+  "total_runs": 1,
+  "prompt_name": "networking.md",
+  "model": "llama3.1:8b",
+  "think_enabled": false,
+  "run_type": "warm",
+  "context_size": 4096,
+  "temperature": 0,
+  "seed": 42,
+  "environment": {
+    "operating_system": "Windows-11-10.0.26200-SP0",
+    "python_version": "3.13.14",
+    "python_implementation": "CPython",
+    "machine_architecture": "AMD64",
+    "ollama_version": "0.32.5",
+    "model": {
+      "name": "llama3.1:8b",
+      "format": "gguf",
+      "family": "llama",
+      "families": [
+        "llama"
+      ],
+      "parameter_size": "8.0B",
+      "quantization_level": "Q4_K_M",
+      "context_length": 131072
+    }
+  },
+  "prompt": "Explain the difference between a router, a managed Ethernet switch and a wireless access point.\n\nDescribe the role of each device in a small home network and give a practical example of how they can be connected together.",
+  "response": "Here's an explanation of the differences between a router, a managed Ethernet switch, and a wireless access point (WAP), along with their roles in a small home network:\n\n**Router:**\n\nA router is a networking device that connects multiple networks together and routes traffic between them. Its primary function is to direct data packets between different IP addresses on a network. Routers are typically used at the edge of a network, connecting it to the internet or other external networks.\n\nKey features:\n\n* Connects multiple networks (e.g., Ethernet, Wi-Fi)\n* Routes traffic between networks\n* Typically has built-in firewall and NAT (Network Address Translation) capabilities\n\n**Managed Ethernet Switch:**\n\nA managed Ethernet switch is a networking device that connects multiple devices on an Ethernet network. It's essentially a hub with intelligence, allowing administrators to configure settings such as VLANs (Virtual Local Area Networks), port mirroring, and Quality of Service (QoS). Managed switches are typically used in larger networks where advanced features are required.\n\nKey features:\n\n* Connects multiple devices on an Ethernet network\n* Supports advanced features like VLANs, QoS, and port mirroring\n* Typically requires a management interface for configuration\n\n**Wireless Access Point (WAP):**\n\nA wireless access point is a networking device that connects wireless clients to a wired network. WAPs are typically used in conjunction with a router or managed switch to provide Wi-Fi connectivity.\n\nKey features:\n\n* Connects wireless devices to a wired network\n* Supports multiple SSIDs (Service Set Identifiers) and authentication methods\n* Typically has built-in QoS and security features\n\n**Practical Example:**\n\nHere's an example of how these devices can be connected together in a small home network:\n\n1. **Router:** A router is used as the edge device, connecting the home network to the internet via a broadband connection (e.g., cable or fiber).\n2. **Managed Ethernet Switch:** A managed switch is installed within the home network to connect multiple devices on an Ethernet network. This could include a computer, printer, and security camera.\n3. **Wireless Access Point:** A WAP is connected to the router via an Ethernet cable, providing Wi-Fi connectivity for wireless devices such as laptops, smartphones, and tablets.\n\nHere's how they can be connected:\n\n* Router (Edge Device) → Managed Switch (within Home Network)\n\t+ Ethernet Cable: Connects router to managed switch\n* Managed Switch (within Home Network) → Wireless Access Point (WAP)\n\t+ Ethernet Cable: Connects managed switch to WAP\n\nIn this example, the router connects the home network to the internet and provides a connection for the managed switch. The managed switch then connects multiple devices on an Ethernet network, while the WAP provides Wi-Fi connectivity for wireless devices.\n\nNote that in smaller networks, a single device (e.g., a router with built-in switch) can perform both routing and switching functions. However, as the network grows or requires more advanced features, separate devices like managed switches and WAPs may be necessary to ensure efficient and secure operation.",
+  "thinking": "",
+  "done_reason": "stop",
+  "metrics": {
+    "total_duration_seconds": 8.279,
+    "load_duration_seconds": 0.162,
+    "prompt_eval_count": 52,
+    "prompt_eval_duration_seconds": 0.055,
+    "eval_count": 628,
+    "eval_duration_seconds": 8.031,
+    "tokens_per_second": 78.2
+  }
+}

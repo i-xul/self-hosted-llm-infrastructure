@@ -1,0 +1,44 @@
+{
+  "benchmark_timestamp": "2026-08-05T23:41:19.236531+03:00",
+  "batch_timestamp": "20260805-233936",
+  "run_number": 1,
+  "total_runs": 1,
+  "prompt_name": "reasoning.md",
+  "model": "llama3.1:8b",
+  "think_enabled": false,
+  "run_type": "warm",
+  "context_size": 4096,
+  "temperature": 0,
+  "seed": 42,
+  "environment": {
+    "operating_system": "Windows-11-10.0.26200-SP0",
+    "python_version": "3.13.14",
+    "python_implementation": "CPython",
+    "machine_architecture": "AMD64",
+    "ollama_version": "0.32.5",
+    "model": {
+      "name": "llama3.1:8b",
+      "format": "gguf",
+      "family": "llama",
+      "families": [
+        "llama"
+      ],
+      "parameter_size": "8.0B",
+      "quantization_level": "Q4_K_M",
+      "context_length": 131072
+    }
+  },
+  "prompt": "A server has three storage drives:\n\n- Drive A: 2 TB, 80% full\n- Drive B: 4 TB, 55% full\n- Drive C: 8 TB, 25% full\n\nA backup requires 3.5 TB of free space on a single drive.\n\nDetermine which drives can store the backup.\n\nShow the calculations clearly and give a concise final answer.",
+  "response": "To determine which drives can store the backup, we need to calculate the available free space on each drive:\n\n**Drive A:**\n2 TB (total capacity) - 1.6 TB (80% of 2 TB) = 0.4 TB (available free space)\n\nSince 0.4 TB is less than 3.5 TB required for backup, Drive A cannot store the backup.\n\n**Drive B:**\n4 TB (total capacity) - 2.2 TB (55% of 4 TB) = 1.8 TB (available free space)\n\nSince 1.8 TB is greater than 3.5 TB required for backup, Drive B can store the backup.\n\n**Drive C:**\n8 TB (total capacity) - 2 TB (25% of 8 TB) = 6 TB (available free space)\n\nSince 6 TB is greater than 3.5 TB required for backup, Drive C can also store the backup.\n\nTherefore, **Drives B and C can store the backup**.",
+  "thinking": "",
+  "done_reason": "stop",
+  "metrics": {
+    "total_duration_seconds": 2.986,
+    "load_duration_seconds": 0.155,
+    "prompt_eval_count": 92,
+    "prompt_eval_duration_seconds": 0.079,
+    "eval_count": 214,
+    "eval_duration_seconds": 2.713,
+    "tokens_per_second": 78.87
+  }
+}

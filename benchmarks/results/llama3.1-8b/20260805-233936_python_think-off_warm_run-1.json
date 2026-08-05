@@ -1,0 +1,44 @@
+{
+  "benchmark_timestamp": "2026-08-05T23:40:56.520191+03:00",
+  "batch_timestamp": "20260805-233936",
+  "run_number": 1,
+  "total_runs": 1,
+  "prompt_name": "python.md",
+  "model": "llama3.1:8b",
+  "think_enabled": false,
+  "run_type": "warm",
+  "context_size": 4096,
+  "temperature": 0,
+  "seed": 42,
+  "environment": {
+    "operating_system": "Windows-11-10.0.26200-SP0",
+    "python_version": "3.13.14",
+    "python_implementation": "CPython",
+    "machine_architecture": "AMD64",
+    "ollama_version": "0.32.5",
+    "model": {
+      "name": "llama3.1:8b",
+      "format": "gguf",
+      "family": "llama",
+      "families": [
+        "llama"
+      ],
+      "parameter_size": "8.0B",
+      "quantization_level": "Q4_K_M",
+      "context_length": 131072
+    }
+  },
+  "prompt": "Write a complete Python 3 program that checks whether a TCP port is open.\n\nRequirements:\n\n- Accept the hostname and port as command-line arguments.\n- Use only the Python standard library.\n- Use a configurable connection timeout.\n- Handle invalid hostnames and connection errors.\n- Return an appropriate exit code.\n- Include clear error messages.\n- Briefly explain how to run the program.",
+  "response": "**tcp_port_checker.py**\n```python\nimport sys\nimport socket\n\ndef check_tcp_port(hostname, port):\n    \"\"\"\n    Check if a TCP port is open.\n\n    Args:\n        hostname (str): Hostname or IP address to connect to.\n        port (int): Port number to check.\n\n    Returns:\n        bool: True if the port is open, False otherwise.\n    \"\"\"\n    try:\n        # Create a socket object\n        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)\n\n        # Set connection timeout (default 1 second)\n        sock.settimeout(1.0)\n\n        # Try to connect to the host and port\n        result = sock.connect_ex((hostname, port))\n\n        # If the connection was successful, the port is open\n        return result == 0\n\n    except socket.gaierror:\n        # Handle invalid hostname or IP address\n        print(f\"Error: Invalid hostname '{hostname}'\")\n        sys.exit(1)\n\n    except ConnectionRefusedError:\n        # Handle connection refused error (port closed)\n        print(f\"Error: Port {port} is closed on host '{hostname}'\")\n        sys.exit(2)\n\n    except socket.timeout:\n        # Handle connection timeout\n        print(f\"Error: Connection to port {port} on host '{hostname}' timed out\")\n        sys.exit(3)\n\n    except Exception as e:\n        # Catch any other exceptions and exit with an error code\n        print(f\"Error: Unexpected exception occurred - {e}\")\n        sys.exit(4)\n\nif __name__ == \"__main__\":\n    if len(sys.argv) != 3:\n        print(\"Usage: python tcp_port_checker.py <hostname> <port>\")\n        sys.exit(5)\n\n    hostname = sys.argv[1]\n    port = int(sys.argv[2])\n\n    result = check_tcp_port(hostname, port)\n    if result:\n        print(f\"Port {port} is open on host '{hostname}'\")\n        sys.exit(0)\n    else:\n        print(f\"Port {port} is closed on host '{hostname}'\")\n        sys.exit(1)\n```\n**How to run the program:**\n\nSave this code in a file named `tcp_port_checker.py`. Then, you can run it from the command line like this:\n\n```bash\npython tcp_port_checker.py example.com 80\n```\n\nReplace `example.com` with the hostname or IP address of the host you want to check, and `80` with the port number you want to check. The program will print a message indicating whether the port is open or closed, and exit with an appropriate status code.\n\nNote: This program uses the `socket` module from the Python standard library, which provides a simple way to create network sockets and perform basic networking operations.",
+  "thinking": "",
+  "done_reason": "stop",
+  "metrics": {
+    "total_duration_seconds": 7.559,
+    "load_duration_seconds": 0.158,
+    "prompt_eval_count": 86,
+    "prompt_eval_duration_seconds": 0.08,
+    "eval_count": 570,
+    "eval_duration_seconds": 7.291,
+    "tokens_per_second": 78.18
+  }
+}

@@ -8,13 +8,15 @@ Models are currently ranked by average token generation speed. Response quality 
 
 | Rank | Model | Parameters | Quantization | Average generation speed | Cold start | Benchmark date |
 |---:|---|---:|---|---:|---:|---|
-| 1 | Qwen3 8B | 8.2B | Q4_K_M | 74.24 tok/s | 34.72 s | 2026-08-05 |
-| 2 | Gemma 3 12B | 12.2B | Q4_K_M | 47.23 tok/s | 64.31 s | 2026-08-05 |
+| 1 | llama3.1:8b | 8.0B | Q4_K_M | 78.22 tok/s | 35.19 s | 2026-08-05 |
+| 2 | Qwen3 8B | 8.2B | Q4_K_M | 74.24 tok/s | 34.72 s | 2026-08-05 |
+| 3 | Gemma 3 12B | 12.2B | Q4_K_M | 47.23 tok/s | 64.31 s | 2026-08-05 |
 
 ## Metadata Sources
 
 | Model | Family | Metadata source |
 |---|---|---|
+| llama3.1:8b | llama | benchmark metadata |
 | Qwen3 8B | qwen3 | compatibility override |
 | Gemma 3 12B | gemma3 | benchmark metadata |
 

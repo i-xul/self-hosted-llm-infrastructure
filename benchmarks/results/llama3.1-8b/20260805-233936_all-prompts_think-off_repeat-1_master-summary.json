@@ -1,0 +1,135 @@
+{
+  "summary_timestamp": "2026-08-05T23:41:30.912126+03:00",
+  "batch_timestamp": "20260805-233936",
+  "model": "llama3.1:8b",
+  "think_enabled": false,
+  "context_size": 4096,
+  "temperature": 0,
+  "seed": 42,
+  "environment": {
+    "operating_system": "Windows-11-10.0.26200-SP0",
+    "python_version": "3.13.14",
+    "python_implementation": "CPython",
+    "machine_architecture": "AMD64",
+    "ollama_version": "0.32.5",
+    "model": {
+      "name": "llama3.1:8b",
+      "format": "gguf",
+      "family": "llama",
+      "families": [
+        "llama"
+      ],
+      "parameter_size": "8.0B",
+      "quantization_level": "Q4_K_M",
+      "context_length": 131072
+    }
+  },
+  "prompt_count": 7,
+  "total_run_count": 7,
+  "cold_run_count": 1,
+  "warm_run_count": 6,
+  "statistics": {
+    "total_duration_seconds": {
+      "mean": 11.561,
+      "median": 8.065,
+      "minimum": 2.986,
+      "maximum": 35.187
+    },
+    "load_duration_seconds": {
+      "mean": 4.79,
+      "median": 0.158,
+      "minimum": 0.154,
+      "maximum": 32.577
+    },
+    "generated_tokens": {
+      "mean": 519.429,
+      "median": 570.0,
+      "minimum": 195.0,
+      "maximum": 879.0
+    },
+    "generation_duration_seconds": {
+      "mean": 6.649,
+      "median": 7.291,
+      "minimum": 2.487,
+      "maximum": 11.279
+    },
+    "tokens_per_second": {
+      "mean": 78.221,
+      "median": 78.18,
+      "minimum": 77.81,
+      "maximum": 78.87
+    }
+  },
+  "prompts": [
+    {
+      "prompt_name": "finnish.md",
+      "run_count": 1,
+      "cold_run_count": 1,
+      "warm_run_count": 0,
+      "mean_total_duration_seconds": 35.187,
+      "median_total_duration_seconds": 35.187,
+      "mean_generated_tokens": 195.0,
+      "mean_tokens_per_second": 78.4
+    },
+    {
+      "prompt_name": "linux.md",
+      "run_count": 1,
+      "cold_run_count": 0,
+      "warm_run_count": 1,
+      "mean_total_duration_seconds": 8.065,
+      "median_total_duration_seconds": 8.065,
+      "mean_generated_tokens": 612.0,
+      "mean_tokens_per_second": 78.16
+    },
+    {
+      "prompt_name": "networking.md",
+      "run_count": 1,
+      "cold_run_count": 0,
+      "warm_run_count": 1,
+      "mean_total_duration_seconds": 8.279,
+      "median_total_duration_seconds": 8.279,
+      "mean_generated_tokens": 628.0,
+      "mean_tokens_per_second": 78.2
+    },
+    {
+      "prompt_name": "python.md",
+      "run_count": 1,
+      "cold_run_count": 0,
+      "warm_run_count": 1,
+      "mean_total_duration_seconds": 7.559,
+      "median_total_duration_seconds": 7.559,
+      "mean_generated_tokens": 570.0,
+      "mean_tokens_per_second": 78.18
+    },
+    {
+      "prompt_name": "raspberry-pi.md",
+      "run_count": 1,
+      "cold_run_count": 0,
+      "warm_run_count": 1,
+      "mean_total_duration_seconds": 11.535,
+      "median_total_duration_seconds": 11.535,
+      "mean_generated_tokens": 879.0,
+      "mean_tokens_per_second": 77.93
+    },
+    {
+      "prompt_name": "reasoning.md",
+      "run_count": 1,
+      "cold_run_count": 0,
+      "warm_run_count": 1,
+      "mean_total_duration_seconds": 2.986,
+      "median_total_duration_seconds": 2.986,
+      "mean_generated_tokens": 214.0,
+      "mean_tokens_per_second": 78.87
+    },
+    {
+      "prompt_name": "summarization.md",
+      "run_count": 1,
+      "cold_run_count": 0,
+      "warm_run_count": 1,
+      "mean_total_duration_seconds": 7.319,
+      "median_total_duration_seconds": 7.319,
+      "mean_generated_tokens": 538.0,
+      "mean_tokens_per_second": 77.81
+    }
+  ]
+}
