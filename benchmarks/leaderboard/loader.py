@@ -1,3 +1,29 @@
+#!/usr/bin/env python3
+#
+# ----------------------------------------------------------------------
+# Self-Hosted LLM Infrastructure
+# ----------------------------------------------------------------------
+#
+# Author: H A (i-xul)
+# Repository: https://github.com/i-xul/self-hosted-llm-infrastructure
+#
+# File: benchmarks/leaderboard/loader.py
+# Created: 2026-08-05
+# Version: v0.4.0
+#
+# Purpose:
+# Finds the newest benchmark master summary for each model and
+# normalizes current and legacy result metadata.
+#
+# Workflow:
+# 1. Discover master-summary JSON files.
+# 2. Select the newest summary per model.
+# 3. Read and validate JSON content.
+# 4. Resolve current or legacy model metadata.
+# 5. Return normalized leaderboard records.
+#
+# ----------------------------------------------------------------------
+
 """Load and normalize benchmark master-summary files."""
 
 from __future__ import annotations
@@ -7,6 +33,11 @@ import re
 from datetime import datetime
 from pathlib import Path
 from typing import Any
+
+
+# =============================================================================
+# Result location and legacy metadata compatibility
+# =============================================================================
 
 RESULTS_DIR = Path(__file__).resolve().parent.parent / "results"
 
@@ -19,13 +50,26 @@ MODEL_METADATA_OVERRIDES: dict[str, dict[str, str]] = {
 }
 
 
+# =============================================================================
+# Summary file discovery
+# =============================================================================
+
 def find_master_summaries() -> list[Path]:
+    """
+    Return all master-summary JSON files in deterministic order.
+    """
+
     if not RESULTS_DIR.exists():
         return []
+
     return sorted(RESULTS_DIR.rglob("*_master-summary.json"))
 
 
 def find_latest_summary_per_model() -> list[Path]:
+    """
+    Return the newest master-summary JSON file for each model directory.
+    """
+
     newest_by_model: dict[str, Path] = {}
 
     for path in find_master_summaries():
@@ -41,9 +85,18 @@ def find_latest_summary_per_model() -> list[Path]:
     )
 
 
+# =============================================================================
+# JSON loading and benchmark timestamps
+# =============================================================================
+
 def read_json(path: Path) -> dict[str, Any]:
+    """
+    Read and validate one JSON master-summary object.
+    """
+
     try:
         data = json.loads(path.read_text(encoding="utf-8"))
+
     except json.JSONDecodeError as error:
         raise ValueError(f"Invalid JSON file: {path}") from error
 
@@ -54,15 +107,25 @@ def read_json(path: Path) -> dict[str, Any]:
 
 
 def _extract_cold_start_seconds(data: dict[str, Any]) -> float | None:
+    """
+    Extract the total duration of the prompt batch containing a cold run.
+    """
+
     for prompt in data.get("prompts", []):
         if prompt.get("cold_run_count", 0) > 0:
             value = prompt.get("mean_total_duration_seconds")
+
             if value is not None:
                 return float(value)
+
     return None
 
 
 def _extract_benchmark_date(data: dict[str, Any]) -> str:
+    """
+    Convert the summary timestamp into an ISO calendar date.
+    """
+
     timestamp = data.get("summary_timestamp")
 
     if not timestamp:
@@ -70,11 +133,20 @@ def _extract_benchmark_date(data: dict[str, Any]) -> str:
 
     try:
         return datetime.fromisoformat(timestamp).date().isoformat()
+
     except ValueError:
         return str(timestamp)
 
 
+# =============================================================================
+# Model metadata compatibility and inference
+# =============================================================================
+
 def _infer_family(model_name: str) -> str:
+    """
+    Infer a broad model family from the Ollama model name.
+    """
+
     base_name = model_name.split(":", maxsplit=1)[0]
     lowered = base_name.casefold()
 
@@ -93,6 +165,10 @@ def _infer_family(model_name: str) -> str:
 
 
 def _infer_parameter_size(model_name: str) -> str:
+    """
+    Infer an approximate parameter size from a model tag such as :8b.
+    """
+
     match = re.search(
         r"(?::|[-_])(?P<size>\d+(?:\.\d+)?)(?P<unit>[bBmM])(?:$|[-_])",
         model_name,
@@ -108,6 +184,11 @@ def _resolve_model_metadata(
     model_name: str,
     model_metadata: dict[str, Any],
 ) -> dict[str, str]:
+    """
+    Resolve model metadata from benchmark data, compatibility overrides,
+    or safe model-name inference.
+    """
+
     override = MODEL_METADATA_OVERRIDES.get(model_name, {})
 
     family = (
@@ -115,11 +196,13 @@ def _resolve_model_metadata(
         or override.get("family")
         or _infer_family(model_name)
     )
+
     parameter_size = (
         model_metadata.get("parameter_size")
         or override.get("parameter_size")
         or _infer_parameter_size(model_name)
     )
+
     quantization = (
         model_metadata.get("quantization_level")
         or override.get("quantization")
@@ -132,8 +215,10 @@ def _resolve_model_metadata(
         and model_metadata.get("quantization_level")
     ):
         metadata_source = "benchmark metadata"
+
     elif override:
         metadata_source = "compatibility override"
+
     else:
         metadata_source = "model-name inference"
 
@@ -145,10 +230,18 @@ def _resolve_model_metadata(
     }
 
 
+# =============================================================================
+# Leaderboard record normalization
+# =============================================================================
+
 def normalize_summary(
     data: dict[str, Any],
     source_path: Path,
 ) -> dict[str, Any]:
+    """
+    Normalize one master summary into the leaderboard record format.
+    """
+
     model_name = str(data.get("model", source_path.parent.name))
     environment = data.get("environment", {})
     model_metadata = environment.get("model", {})
@@ -171,6 +264,10 @@ def normalize_summary(
 
 
 def load_latest_model_summaries() -> list[dict[str, Any]]:
+    """
+    Load normalized records from the newest summary for every tested model.
+    """
+
     return [
         normalize_summary(read_json(path), path)
         for path in find_latest_summary_per_model()

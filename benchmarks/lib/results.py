@@ -1,3 +1,28 @@
+#!/usr/bin/env python3
+#
+# ----------------------------------------------------------------------
+# Self-Hosted LLM Infrastructure
+# ----------------------------------------------------------------------
+#
+# Author: H A (i-xul)
+# Repository: https://github.com/i-xul/self-hosted-llm-infrastructure
+#
+# File: benchmarks/lib/results.py
+# Created: 2026-08-05
+# Version: v1.0.0
+#
+# Purpose:
+# Normalizes individual Ollama results and builds repeated-run and
+# all-prompts benchmark summary records.
+#
+# Workflow:
+# 1. Build one normalized benchmark record.
+# 2. Calculate aggregate metric statistics.
+# 3. Build one-prompt repeated-run summaries.
+# 4. Build all-prompts master summaries.
+#
+# ----------------------------------------------------------------------
+
 """Benchmark result normalization and summary generation."""
 
 from __future__ import annotations
@@ -11,10 +36,18 @@ from .metrics import (
     summarize_numeric_values,
 )
 
+# =============================================================================
+# Fixed benchmark parameters
+# =============================================================================
+
 CONTEXT_SIZE = 4096
 TEMPERATURE = 0
 SEED = 42
 
+
+# =============================================================================
+# Individual result normalization
+# =============================================================================
 
 def build_result_record(
     *,
@@ -29,7 +62,10 @@ def build_result_record(
     batch_timestamp: str,
     environment: dict[str, Any],
 ) -> dict[str, Any]:
-    """Build the normalized benchmark result record."""
+    """
+    Build one normalized benchmark result record.
+    """
+
     tokens_per_second = calculate_tokens_per_second(result)
 
     return {
@@ -51,18 +87,22 @@ def build_result_record(
         "done_reason": result.get("done_reason"),
         "metrics": {
             "total_duration_seconds": round(
-                nanoseconds_to_seconds(result.get("total_duration")), 3
+                nanoseconds_to_seconds(result.get("total_duration")),
+                3,
             ),
             "load_duration_seconds": round(
-                nanoseconds_to_seconds(result.get("load_duration")), 3
+                nanoseconds_to_seconds(result.get("load_duration")),
+                3,
             ),
             "prompt_eval_count": result.get("prompt_eval_count"),
             "prompt_eval_duration_seconds": round(
-                nanoseconds_to_seconds(result.get("prompt_eval_duration")), 3
+                nanoseconds_to_seconds(result.get("prompt_eval_duration")),
+                3,
             ),
             "eval_count": result.get("eval_count"),
             "eval_duration_seconds": round(
-                nanoseconds_to_seconds(result.get("eval_duration")), 3
+                nanoseconds_to_seconds(result.get("eval_duration")),
+                3,
             ),
             "tokens_per_second": (
                 round(tokens_per_second, 2)
@@ -73,10 +113,17 @@ def build_result_record(
     }
 
 
+# =============================================================================
+# Shared aggregate statistics
+# =============================================================================
+
 def _build_statistics(
     records: list[dict[str, Any]],
 ) -> dict[str, dict[str, float | None]]:
-    """Build aggregate statistics from normalized benchmark records."""
+    """
+    Build aggregate metric statistics from normalized benchmark records.
+    """
+
     metrics = [record["metrics"] for record in records]
 
     return {
@@ -98,10 +145,17 @@ def _build_statistics(
     }
 
 
+# =============================================================================
+# Prompt-level repeated-run summaries
+# =============================================================================
+
 def build_summary_record(
     records: list[dict[str, Any]],
 ) -> dict[str, Any]:
-    """Build aggregate statistics for one prompt batch."""
+    """
+    Build aggregate statistics for one repeated prompt batch.
+    """
+
     if not records:
         raise ValueError("Cannot build a summary without benchmark records.")
 
@@ -146,12 +200,19 @@ def build_summary_record(
     }
 
 
+# =============================================================================
+# All-prompts master summaries
+# =============================================================================
+
 def build_master_summary_record(
     *,
     records: list[dict[str, Any]],
     prompt_summaries: list[dict[str, Any]],
 ) -> dict[str, Any]:
-    """Build aggregate statistics across every selected prompt."""
+    """
+    Build aggregate statistics across every selected benchmark prompt.
+    """
+
     if not records or not prompt_summaries:
         raise ValueError(
             "Cannot build a master summary without benchmark records."

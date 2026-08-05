@@ -1,3 +1,28 @@
+#!/usr/bin/env python3
+#
+# ----------------------------------------------------------------------
+# Self-Hosted LLM Infrastructure
+# ----------------------------------------------------------------------
+#
+# Author: H A (i-xul)
+# Repository: https://github.com/i-xul/self-hosted-llm-infrastructure
+#
+# File: benchmarks/lib/environment.py
+# Created: 2026-08-05
+# Version: v1.0.0
+#
+# Purpose:
+# Collects operating-system, Python, Ollama, and model metadata for
+# reproducible benchmark reports.
+#
+# Workflow:
+# 1. Read local operating-system and Python information.
+# 2. Query Ollama version information.
+# 3. Query installed model metadata.
+# 4. Normalize the collected environment record.
+#
+# ----------------------------------------------------------------------
+
 """Collect benchmark environment and model metadata."""
 
 from __future__ import annotations
@@ -9,17 +34,27 @@ from typing import Any
 from .api import get_model_details, get_ollama_version
 
 
+# =============================================================================
+# Environment metadata collection
+# =============================================================================
+
 def collect_environment_metadata(
     *,
     generate_api_url: str,
     model: str,
     timeout: int,
 ) -> dict[str, Any]:
-    """Collect stable software, operating system, and model metadata."""
+    """
+    Collect stable software, operating-system, and model metadata.
+
+    The returned object is embedded in benchmark result and summary reports.
+    """
+
     version_data = get_ollama_version(
         generate_api_url=generate_api_url,
         timeout=timeout,
     )
+
     model_data = get_model_details(
         generate_api_url=generate_api_url,
         model=model,

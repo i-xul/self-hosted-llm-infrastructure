@@ -1,4 +1,30 @@
-"""Run repeatable benchmark prompts against the local Ollama API."""
+#!/usr/bin/env python3
+#
+# ----------------------------------------------------------------------
+# Self-Hosted LLM Infrastructure
+# ----------------------------------------------------------------------
+#
+# Author: H A (i-xul)
+# Repository: https://github.com/i-xul/self-hosted-llm-infrastructure
+#
+# File: benchmarks/benchmark_runner.py
+# Created: 2026-08-02
+# Version: v1.0.0
+#
+# Purpose:
+# Runs repeatable benchmark prompts against a local Ollama model and
+# stores detailed JSON and Markdown reports.
+#
+# Workflow:
+# 1. Parse and validate command-line arguments.
+# 2. Collect environment and model metadata.
+# 3. Select one prompt or every available prompt.
+# 4. Run one or more benchmark executions.
+# 5. Write individual, repeated, and master summary reports.
+#
+# ----------------------------------------------------------------------
+
+"""Command-line entry point for the local LLM benchmark runner."""
 
 from __future__ import annotations
 
@@ -27,58 +53,82 @@ from lib.results import (
 )
 from lib.utils import RESULTS_DIR, safe_path_component
 
+# =============================================================================
+# Default runtime configuration
+# =============================================================================
+
 DEFAULT_MODEL = "qwen3:8b"
 
 
+# =============================================================================
+# Command-line argument handling
+# =============================================================================
+
 def parse_arguments() -> argparse.Namespace:
-    """Parse command-line arguments."""
+    """
+    Parse benchmark runner command-line arguments.
+
+    The user may run either one named prompt or every prompt with --all.
+    """
+
     parser = argparse.ArgumentParser(
         description="Run benchmark prompts against a local Ollama model."
     )
+
     parser.add_argument(
         "prompt",
         nargs="?",
         help="Prompt filename or name, for example finnish or finnish.md.",
     )
+
     parser.add_argument(
         "--all",
         action="store_true",
         dest="run_all",
         help="Run every Markdown prompt in the prompts directory.",
     )
+
     parser.add_argument(
         "--model",
         default=DEFAULT_MODEL,
         help=f"Ollama model name. Default: {DEFAULT_MODEL}",
     )
+
     parser.add_argument(
         "--think",
         choices=("on", "off"),
         default="off",
         help="Enable or disable model reasoning. Default: off",
     )
+
     parser.add_argument(
         "--repeat",
         type=int,
         default=1,
         help="Number of runs for each prompt. Default: 1",
     )
+
     parser.add_argument(
         "--api-url",
         default=DEFAULT_API_URL,
         help=f"Ollama generate endpoint. Default: {DEFAULT_API_URL}",
     )
+
     parser.add_argument(
         "--timeout",
         type=int,
         default=600,
         help="HTTP request timeout in seconds. Default: 600",
     )
+
     return parser.parse_args()
 
 
 def validate_arguments(args: argparse.Namespace) -> None:
-    """Validate command-line argument combinations and values."""
+    """
+    Validate argument values and mutually exclusive prompt-selection modes.
+    """
+
     if args.repeat < 1:
         raise ValueError("--repeat must be at least 1.")
 
@@ -90,7 +140,10 @@ def validate_arguments(args: argparse.Namespace) -> None:
 
 
 def select_prompt_paths(args: argparse.Namespace) -> list[Path]:
-    """Select one prompt or every available prompt."""
+    """
+    Return the selected prompt path or every available prompt path.
+    """
+
     if args.run_all:
         prompt_paths = list_prompt_paths()
 
@@ -101,6 +154,10 @@ def select_prompt_paths(args: argparse.Namespace) -> list[Path]:
 
     return [resolve_prompt_path(args.prompt)]
 
+
+# =============================================================================
+# Single benchmark execution
+# =============================================================================
 
 def run_single_benchmark(
     *,
@@ -115,7 +172,10 @@ def run_single_benchmark(
     batch_timestamp: str,
     environment: dict[str, Any],
 ) -> dict[str, Any]:
-    """Run and store one benchmark execution."""
+    """
+    Execute one benchmark request and write its individual result files.
+    """
+
     run_type = detect_run_type(
         generate_api_url=api_url,
         model=model,
@@ -155,6 +215,7 @@ def run_single_benchmark(
     model_dir.mkdir(parents=True, exist_ok=True)
 
     think_label = "on" if think_enabled else "off"
+
     output_base = model_dir / (
         f"{batch_timestamp}_{Path(prompt_name).stem}_"
         f"think-{think_label}_{run_type}_run-{run_number}"
@@ -176,6 +237,10 @@ def run_single_benchmark(
     return record
 
 
+# =============================================================================
+# Prompt batch execution
+# =============================================================================
+
 def run_prompt_batch(
     *,
     prompt_path: Path,
@@ -187,7 +252,12 @@ def run_prompt_batch(
     batch_timestamp: str,
     environment: dict[str, Any],
 ) -> tuple[list[dict[str, Any]], dict[str, Any]]:
-    """Run all requested repetitions for one prompt."""
+    """
+    Run all requested repetitions for one benchmark prompt.
+
+    Repeated batches also produce prompt-level JSON and Markdown summaries.
+    """
+
     prompt_text = read_prompt(prompt_path)
     records: list[dict[str, Any]] = []
 
@@ -216,6 +286,7 @@ def run_prompt_batch(
     if repeat > 1:
         model_dir = RESULTS_DIR / safe_path_component(model)
         think_label = "on" if think_enabled else "off"
+
         summary_base = model_dir / (
             f"{batch_timestamp}_{prompt_path.stem}_"
             f"think-{think_label}_repeat-{repeat}_summary"
@@ -227,15 +298,24 @@ def run_prompt_batch(
     return records, summary
 
 
+# =============================================================================
+# Main application workflow
+# =============================================================================
+
 def main() -> int:
-    """Run selected benchmarks and save result reports."""
+    """
+    Run selected benchmarks and generate all requested reports.
+    """
+
     args = parse_arguments()
 
     try:
         validate_arguments(args)
+
         prompt_paths = select_prompt_paths(args)
         batch_timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
         think_enabled = args.think == "on"
+
         environment = collect_environment_metadata(
             generate_api_url=args.api_url,
             model=args.model,
@@ -265,6 +345,7 @@ def main() -> int:
                 batch_timestamp=batch_timestamp,
                 environment=environment,
             )
+
             all_records.extend(records)
             prompt_summaries.append(summary)
 
@@ -276,6 +357,7 @@ def main() -> int:
 
             model_dir = RESULTS_DIR / safe_path_component(args.model)
             think_label = "on" if think_enabled else "off"
+
             master_base = model_dir / (
                 f"{batch_timestamp}_all-prompts_"
                 f"think-{think_label}_repeat-{args.repeat}_master-summary"

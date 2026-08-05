@@ -1,3 +1,28 @@
+#!/usr/bin/env python3
+#
+# ----------------------------------------------------------------------
+# Self-Hosted LLM Infrastructure
+# ----------------------------------------------------------------------
+#
+# Author: H A (i-xul)
+# Repository: https://github.com/i-xul/self-hosted-llm-infrastructure
+#
+# File: benchmarks/leaderboard/markdown.py
+# Created: 2026-08-05
+# Version: v0.4.0
+#
+# Purpose:
+# Ranks normalized benchmark records and generates the Markdown
+# performance leaderboard.
+#
+# Workflow:
+# 1. Format optional numeric fields.
+# 2. Convert model names into display names.
+# 3. Sort models by average generation speed.
+# 4. Build and write LEADERBOARD.md.
+#
+# ----------------------------------------------------------------------
+
 """Generate the Markdown leaderboard."""
 
 from __future__ import annotations
@@ -6,28 +31,50 @@ from pathlib import Path
 from typing import Any
 
 
+# =============================================================================
+# Display formatting
+# =============================================================================
+
 def _format_number(
     value: int | float | None,
     *,
     decimals: int = 2,
     suffix: str = "",
 ) -> str:
+    """
+    Format an optional numeric value for Markdown.
+    """
+
     if value is None:
         return "unknown"
+
     return f"{float(value):.{decimals}f}{suffix}"
 
 
 def _model_display_name(model_name: str) -> str:
+    """
+    Convert known Ollama model identifiers into readable display names.
+    """
+
     known_names = {
         "qwen3:8b": "Qwen3 8B",
         "gemma3:12b": "Gemma 3 12B",
     }
+
     return known_names.get(model_name, model_name)
 
+
+# =============================================================================
+# Performance ranking
+# =============================================================================
 
 def _sort_summaries(
     summaries: list[dict[str, Any]],
 ) -> list[dict[str, Any]]:
+    """
+    Sort models by average token generation speed, fastest first.
+    """
+
     return sorted(
         summaries,
         key=lambda item: (
@@ -38,12 +85,21 @@ def _sort_summaries(
     )
 
 
+# =============================================================================
+# Markdown generation
+# =============================================================================
+
 def build_leaderboard_markdown(
     summaries: list[dict[str, Any]],
 ) -> str:
+    """
+    Build the complete Markdown leaderboard document.
+    """
+
     sorted_summaries = _sort_summaries(summaries)
 
     rows = []
+
     for rank, summary in enumerate(sorted_summaries, start=1):
         rows.append(
             "| {rank} | {model} | {parameters} | {quantization} | "
@@ -100,6 +156,12 @@ def build_leaderboard_markdown(
         "response quality.\n"
         "- Manual quality comparisons are stored in "
         "`benchmarks/comparisons/`.\n"
+        "\n"
+        "## Quality Comparisons\n\n"
+        "Performance metrics should be interpreted together with manual "
+        "response-quality evaluations.\n\n"
+        "- [Qwen3 8B vs. Gemma 3 12B]"
+        "(comparisons/qwen3-8b-vs-gemma3-12b.md)\n"
     )
 
 
@@ -108,8 +170,13 @@ def write_leaderboard(
     summaries: list[dict[str, Any]],
     output_path: Path,
 ) -> Path:
+    """
+    Write the generated Markdown leaderboard to disk.
+    """
+
     output_path.write_text(
         build_leaderboard_markdown(summaries),
         encoding="utf-8",
     )
+
     return output_path

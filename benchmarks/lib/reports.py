@@ -1,3 +1,29 @@
+#!/usr/bin/env python3
+#
+# ----------------------------------------------------------------------
+# Self-Hosted LLM Infrastructure
+# ----------------------------------------------------------------------
+#
+# Author: H A (i-xul)
+# Repository: https://github.com/i-xul/self-hosted-llm-infrastructure
+#
+# File: benchmarks/lib/reports.py
+# Created: 2026-08-05
+# Version: v1.0.0
+#
+# Purpose:
+# Writes individual, repeated, and all-prompts benchmark reports in
+# JSON and human-readable Markdown formats.
+#
+# Workflow:
+# 1. Write consistently formatted JSON files.
+# 2. Render environment metadata.
+# 3. Write individual benchmark reports.
+# 4. Write repeated-run summaries.
+# 5. Write all-prompts master summaries.
+#
+# ----------------------------------------------------------------------
+
 """JSON and Markdown benchmark report generation."""
 
 from __future__ import annotations
@@ -7,18 +33,30 @@ from pathlib import Path
 from typing import Any
 
 
+# =============================================================================
+# Shared JSON and formatting helpers
+# =============================================================================
+
 def _write_json(data: dict[str, Any], output_base: Path) -> Path:
-    """Write JSON data using consistent formatting."""
+    """
+    Write JSON data with stable UTF-8 and indentation settings.
+    """
+
     output_path = output_base.with_suffix(".json")
+
     output_path.write_text(
         json.dumps(data, ensure_ascii=False, indent=2),
         encoding="utf-8",
     )
+
     return output_path
 
 
 def _environment_markdown(environment: dict[str, Any]) -> str:
-    """Render environment and model metadata as Markdown."""
+    """
+    Render environment and model metadata as a Markdown table.
+    """
+
     model = environment.get("model", {})
     families = ", ".join(model.get("families") or []) or "N/A"
 
@@ -40,11 +78,18 @@ def _environment_markdown(environment: dict[str, Any]) -> str:
     )
 
 
+# =============================================================================
+# Individual benchmark reports
+# =============================================================================
+
 def write_json_result(
     record: dict[str, Any],
     output_base: Path,
 ) -> Path:
-    """Write the complete benchmark result as JSON."""
+    """
+    Write one complete benchmark result as JSON.
+    """
+
     return _write_json(record, output_base)
 
 
@@ -52,13 +97,17 @@ def write_markdown_result(
     record: dict[str, Any],
     output_base: Path,
 ) -> Path:
-    """Write a human-readable benchmark report as Markdown."""
+    """
+    Write one complete benchmark result as Markdown.
+    """
+
     metrics = record["metrics"]
     thinking_label = "on" if record["think_enabled"] else "off"
     thinking_section = ""
 
     if record["think_enabled"]:
         thinking_text = record["thinking"].strip()
+
         thinking_section = (
             "\n## Thinking output\n\n"
             "```text\n"
@@ -104,14 +153,22 @@ def write_markdown_result(
 
     output_path = output_base.with_suffix(".md")
     output_path.write_text(markdown, encoding="utf-8")
+
     return output_path
 
+
+# =============================================================================
+# Repeated-run summary reports
+# =============================================================================
 
 def write_summary_json(
     summary: dict[str, Any],
     output_base: Path,
 ) -> Path:
-    """Write one prompt's aggregate statistics as JSON."""
+    """
+    Write one prompt's aggregate statistics as JSON.
+    """
+
     return _write_json(summary, output_base)
 
 
@@ -119,7 +176,10 @@ def write_summary_markdown(
     summary: dict[str, Any],
     output_base: Path,
 ) -> Path:
-    """Write one prompt's aggregate statistics as Markdown."""
+    """
+    Write one prompt's aggregate statistics as Markdown.
+    """
+
     stats = summary["statistics"]
     think_label = "on" if summary["think_enabled"] else "off"
 
@@ -172,14 +232,22 @@ def write_summary_markdown(
 
     output_path = output_base.with_suffix(".md")
     output_path.write_text(markdown, encoding="utf-8")
+
     return output_path
 
+
+# =============================================================================
+# All-prompts master summary reports
+# =============================================================================
 
 def write_master_summary_json(
     summary: dict[str, Any],
     output_base: Path,
 ) -> Path:
-    """Write the all-prompts master summary as JSON."""
+    """
+    Write the all-prompts master summary as JSON.
+    """
+
     return _write_json(summary, output_base)
 
 
@@ -187,7 +255,10 @@ def write_master_summary_markdown(
     summary: dict[str, Any],
     output_base: Path,
 ) -> Path:
-    """Write the all-prompts master summary as Markdown."""
+    """
+    Write the all-prompts master summary as Markdown.
+    """
+
     stats = summary["statistics"]
     think_label = "on" if summary["think_enabled"] else "off"
 
@@ -241,4 +312,5 @@ def write_master_summary_markdown(
 
     output_path = output_base.with_suffix(".md")
     output_path.write_text(markdown, encoding="utf-8")
+
     return output_path
