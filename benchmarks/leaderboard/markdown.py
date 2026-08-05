@@ -9,30 +9,25 @@
 #
 # File: benchmarks/leaderboard/markdown.py
 # Created: 2026-08-05
-# Version: v0.4.0
+# Version: v0.5.0
 #
 # Purpose:
-# Ranks normalized benchmark records and generates the Markdown
-# performance leaderboard.
+# Generate separate performance and manual quality rankings.
 #
 # Workflow:
-# 1. Format optional numeric fields.
-# 2. Convert model names into display names.
-# 3. Sort models by average generation speed.
-# 4. Build and write LEADERBOARD.md.
+# 1. Format values.\n# 2. Rank performance.\n# 3. Rank quality.\n# 4. Write LEADERBOARD.md.
 #
 # ----------------------------------------------------------------------
 
-"""Generate the Markdown leaderboard."""
+"""Markdown leaderboard generation."""
 
 from __future__ import annotations
 
 from pathlib import Path
 from typing import Any
 
-
 # =============================================================================
-# Display formatting
+# Formatting helpers
 # =============================================================================
 
 def _format_number(
@@ -41,78 +36,81 @@ def _format_number(
     decimals: int = 2,
     suffix: str = "",
 ) -> str:
-    """
-    Format an optional numeric value for Markdown.
-    """
-
-    if value is None:
-        return "unknown"
-
-    return f"{float(value):.{decimals}f}{suffix}"
+    """Format an optional numeric benchmark value."""
+    return "unknown" if value is None else f"{float(value):.{decimals}f}{suffix}"
 
 
-def _model_display_name(model_name: str) -> str:
-    """
-    Convert known Ollama model identifiers into readable display names.
-    """
+def _format_score(value: int | float | None) -> str:
+    """Format an optional quality score."""
+    return "not rated" if value is None else f"{float(value):.1f}/10"
 
-    known_names = {
-        "qwen3:8b": "Qwen3 8B",
-        "gemma3:12b": "Gemma 3 12B",
-    }
 
-    return known_names.get(model_name, model_name)
+def _display_name(
+    model_name: str,
+    quality_models: dict[str, dict[str, Any]],
+) -> str:
+    """Return the configured model display name."""
+    return str(
+        quality_models.get(model_name, {}).get("display_name", model_name)
+    )
 
 
 # =============================================================================
-# Performance ranking
+# Ranking helpers
 # =============================================================================
 
-def _sort_summaries(
+def _sort_by_speed(
     summaries: list[dict[str, Any]],
 ) -> list[dict[str, Any]]:
-    """
-    Sort models by average token generation speed, fastest first.
-    """
-
+    """Sort models by average generation speed."""
     return sorted(
         summaries,
-        key=lambda item: (
-            item.get("average_tokens_per_second") is not None,
-            item.get("average_tokens_per_second") or 0,
-        ),
+        key=lambda item: item.get("average_tokens_per_second") or 0,
+        reverse=True,
+    )
+
+
+def _sort_by_quality(
+    summaries: list[dict[str, Any]],
+    quality_models: dict[str, dict[str, Any]],
+) -> list[dict[str, Any]]:
+    """Sort benchmarked models by overall manual quality score."""
+    return sorted(
+        summaries,
+        key=lambda item: quality_models.get(
+            item["model"], {}
+        ).get("overall_score") or 0,
         reverse=True,
     )
 
 
 # =============================================================================
-# Markdown generation
+# Markdown document generation
 # =============================================================================
 
 def build_leaderboard_markdown(
+    *,
     summaries: list[dict[str, Any]],
+    quality_data: dict[str, Any],
 ) -> str:
-    """
-    Build the complete Markdown leaderboard document.
-    """
+    """Build the combined performance and quality leaderboard."""
+    quality_models = quality_data.get("models", {})
+    scale = quality_data.get("scoring_scale", {})
 
-    sorted_summaries = _sort_summaries(summaries)
-
-    rows = []
-
-    for rank, summary in enumerate(sorted_summaries, start=1):
-        rows.append(
+    performance_rows = []
+    for rank, summary in enumerate(_sort_by_speed(summaries), start=1):
+        performance_rows.append(
             "| {rank} | {model} | {parameters} | {quantization} | "
-            "{speed} | {cold_start} | {date} |".format(
+            "{speed} | {cold} | {date} |".format(
                 rank=rank,
-                model=_model_display_name(summary["model"]),
+                model=_display_name(summary["model"], quality_models),
                 parameters=summary["parameter_size"],
                 quantization=summary["quantization"],
                 speed=_format_number(
                     summary["average_tokens_per_second"],
                     suffix=" tok/s",
                 ),
-                cold_start=_format_number(
+                cold=_format_number(
                     summary["cold_start_seconds"],
                     suffix=" s",
                 ),
@@ -120,46 +118,65 @@ def build_leaderboard_markdown(
             )
         )
 
+    quality_rows = []
+    for rank, summary in enumerate(
+        _sort_by_quality(summaries, quality_models),
+        start=1,
+    ):
+        model_quality = quality_models.get(summary["model"], {})
+        scores = model_quality.get("scores", {})
+
+        quality_rows.append(
+            "| {rank} | {model} | {finnish} | {python} | "
+            "{summary_score} | {overall} |".format(
+                rank=rank,
+                model=_display_name(summary["model"], quality_models),
+                finnish=_format_score(scores.get("finnish")),
+                python=_format_score(scores.get("python")),
+                summary_score=_format_score(scores.get("summarization")),
+                overall=_format_score(model_quality.get("overall_score")),
+            )
+        )
+
     metadata_rows = [
         "| {model} | {family} | {source} |".format(
-            model=_model_display_name(summary["model"]),
+            model=_display_name(summary["model"], quality_models),
             family=summary["family"],
             source=summary["metadata_source"],
         )
-        for summary in sorted_summaries
+        for summary in _sort_by_speed(summaries)
     ]
 
     return (
-        "# Local LLM Performance Leaderboard\n\n"
-        "This leaderboard is generated automatically from the latest "
-        "all-prompts master summary for each tested model.\n\n"
-        "Models are currently ranked by average token generation speed. "
-        "Response quality is evaluated separately in the comparison documents.\n\n"
+        "# Local LLM Performance and Quality Leaderboard\n\n"
+        "Performance and manually evaluated response quality are ranked "
+        "separately because faster generation does not guarantee better answers.\n\n"
         "## Performance Ranking\n\n"
         "| Rank | Model | Parameters | Quantization | "
         "Average generation speed | Cold start | Benchmark date |\n"
         "|---:|---|---:|---|---:|---:|---|\n"
-        + "\n".join(rows)
+        + "\n".join(performance_rows)
         + "\n\n"
+        "## Manual Quality Ranking\n\n"
+        "| Rank | Model | Finnish | Python | Summarization | Overall |\n"
+        "|---:|---|---:|---:|---:|---:|\n"
+        + "\n".join(quality_rows)
+        + "\n\n"
+        f"Quality scale: {scale.get('minimum', 1)}–"
+        f"{scale.get('maximum', 10)}, step {scale.get('step', 0.5)}.\n\n"
+        f"**Evaluation scope:** {quality_data.get('evaluation_scope')}\n\n"
         "## Metadata Sources\n\n"
         "| Model | Family | Metadata source |\n"
         "|---|---|---|\n"
         + "\n".join(metadata_rows)
         + "\n\n"
         "## Interpretation\n\n"
-        "- Average generation speed is calculated across the full "
-        "all-prompts benchmark pass.\n"
-        "- Cold start includes loading the model from local storage.\n"
-        "- All current models use Q4_K_M quantization and were tested "
-        "with GPU acceleration.\n"
-        "- A higher token rate does not automatically indicate better "
-        "response quality.\n"
-        "- Manual quality comparisons are stored in "
-        "`benchmarks/comparisons/`.\n"
+        "- Performance values come from each model's latest all-prompts run.\n"
+        "- Cold start includes model loading from local storage.\n"
+        "- Overall quality is the arithmetic mean of available category scores.\n"
+        "- Manual scores are preliminary human evaluations, not objective facts.\n"
         "\n"
         "## Quality Comparisons\n\n"
-        "Performance metrics should be interpreted together with manual "
-        "response-quality evaluations.\n\n"
         "- [Qwen3 8B vs. Gemma 3 12B]"
         "(comparisons/qwen3-8b-vs-gemma3-12b.md)\n"
     )
@@ -168,15 +185,15 @@ def build_leaderboard_markdown(
 def write_leaderboard(
     *,
     summaries: list[dict[str, Any]],
+    quality_data: dict[str, Any],
     output_path: Path,
 ) -> Path:
-    """
-    Write the generated Markdown leaderboard to disk.
-    """
-
+    """Write the generated leaderboard to disk."""
     output_path.write_text(
-        build_leaderboard_markdown(summaries),
+        build_leaderboard_markdown(
+            summaries=summaries,
+            quality_data=quality_data,
+        ),
         encoding="utf-8",
     )
-
     return output_path

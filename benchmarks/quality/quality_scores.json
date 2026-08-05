@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "scoring_scale": {
+    "minimum": 1,
+    "maximum": 10,
+    "step": 0.5
+  },
+  "evaluation_scope": "Selected Finnish, Python and summarization benchmark responses",
+  "models": {
+    "qwen3:8b": {
+      "display_name": "Qwen3 8B",
+      "scores": {
+        "finnish": 6.0,
+        "python": 7.0,
+        "summarization": 6.0
+      },
+      "notes": {
+        "finnish": "Understandable Finnish, but several expressions sounded translated or unnatural and the response was shorter than requested.",
+        "python": "Produced a concise and mostly usable standard-library solution, although instruction following and argument descriptions were imperfect.",
+        "summarization": "Captured the main topic, but Finnish wording and instruction following were less polished than Gemma 3 12B."
+      }
+    },
+    "gemma3:12b": {
+      "display_name": "Gemma 3 12B",
+      "scores": {
+        "finnish": 8.5,
+        "python": 7.5,
+        "summarization": 8.0
+      },
+      "notes": {
+        "finnish": "Produced the most natural Finnish of the tested models, although the price claim was overly broad.",
+        "python": "Generated a comprehensive and mostly usable program, but the timeout was not configurable from the command line and the answer was unnecessarily verbose.",
+        "summarization": "Preserved the main benefits, risks and pilot decision within five sentences, but began with an unnecessary English introduction."
+      }
+    },
+    "llama3.1:8b": {
+      "display_name": "Llama 3.1 8B",
+      "scores": {
+        "finnish": 4.0,
+        "python": 6.0,
+        "summarization": 3.0
+      },
+      "notes": {
+        "finnish": "Finnish was repetitive and unnatural, and the separate manual test contained serious factual errors about Raspberry Pi hardware.",
+        "python": "Produced a readable basic program, but the timeout was fixed, port conversion errors were not handled and some exception branches were ineffective with connect_ex.",
+        "summarization": "Exceeded the five-sentence limit substantially and contained multiple awkward or incorrect Finnish expressions."
+      }
+    }
+  }
+}

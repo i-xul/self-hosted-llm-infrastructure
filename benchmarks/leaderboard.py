@@ -9,55 +9,52 @@
 #
 # File: benchmarks/leaderboard.py
 # Created: 2026-08-05
-# Version: v0.4.0
+# Version: v0.5.0
 #
 # Purpose:
-# Generates an automatically updated Markdown leaderboard from the
-# latest all-prompts benchmark summary for every tested model.
+# Generate a Markdown leaderboard from benchmark and quality data.
 #
 # Workflow:
-# 1. Load and normalize the newest summary for each model.
-# 2. Rank models by measured generation speed.
-# 3. Generate benchmarks/LEADERBOARD.md.
+# 1. Load benchmark summaries.\n# 2. Load quality scores.\n# 3. Generate LEADERBOARD.md.
 #
 # ----------------------------------------------------------------------
 
-"""Command-line entry point for Markdown leaderboard generation."""
+"""Command-line entry point for leaderboard generation."""
 
 from pathlib import Path
 
 from leaderboard.loader import load_latest_model_summaries
 from leaderboard.markdown import write_leaderboard
-
+from leaderboard.quality import load_quality_scores
 
 # =============================================================================
-# Generated leaderboard path
+# Generated output path
 # =============================================================================
 
 OUTPUT_PATH = Path(__file__).resolve().parent / "LEADERBOARD.md"
 
 
 # =============================================================================
-# Main leaderboard workflow
+# Main workflow
 # =============================================================================
 
 def main() -> None:
-    """
-    Load current benchmark summaries and generate LEADERBOARD.md.
-    """
-
+    """Load benchmark and quality data, then write LEADERBOARD.md."""
     summaries = load_latest_model_summaries()
 
     if not summaries:
         print("No benchmark summaries were found.")
         return
 
+    quality_data = load_quality_scores()
     output_path = write_leaderboard(
         summaries=summaries,
+        quality_data=quality_data,
         output_path=OUTPUT_PATH,
     )
 
     print(f"Loaded model summaries: {len(summaries)}")
+    print(f"Loaded quality evaluations: {len(quality_data['models'])}")
     print(f"Leaderboard written to: {output_path}")
 
 
