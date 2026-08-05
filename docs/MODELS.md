@@ -4,6 +4,22 @@ This document tracks every language model evaluated during this project.
 
 The objective is not to identify a single "best" model, but to understand the strengths, limitations and resource requirements of different open-source models running entirely on local hardware.
 
+## Tested Models
+
+| Model | Parameters | Quantization | GPU placement | Status | Comparison |
+|---|---:|---|---|---|---|
+| Qwen3 8B | 8.2B | Q4_K_M | 100% GPU | Benchmarked | [Qwen3 8B vs. Gemma 3 12B](../benchmarks/comparisons/qwen3-8b-vs-gemma3-12b.md) |
+| Gemma 3 12B | 12.2B | Q4_K_M | 100% GPU | Benchmarked | [Qwen3 8B vs. Gemma 3 12B](../benchmarks/comparisons/qwen3-8b-vs-gemma3-12b.md) |
+
+## Initial Performance Summary
+
+| Model | Stored size | Approximate generation speed | Initial observation |
+|---|---:|---:|---|
+| Qwen3 8B | 5.2 GB | 74–75 tokens/s | Faster and more responsive, but Finnish wording was occasionally unnatural |
+| Gemma 3 12B | 8.1 GB | 46–48 tokens/s | Slower, but generally produced more natural Finnish and more detailed responses |
+
+Both models fit entirely in the 16 GB VRAM of the AMD Radeon RX 7800 XT.
+
 ---
 
 # Evaluation Method
@@ -112,10 +128,6 @@ Evaluation goals:
 
 ## Gemma family
 
-Status:
-
-Not yet tested.
-
 Evaluation goals:
 
 * Speed
@@ -135,6 +147,16 @@ Evaluation goals:
 * Reasoning
 * Technical writing
 * Response quality
+
+---
+
+## Planned Models
+
+- Llama family
+- Mistral family
+- Phi family
+- Larger Qwen variants
+- Additional models that fit fully or partially within the available 16 GB VRAM
 
 ---
 

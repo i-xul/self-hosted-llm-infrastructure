@@ -47,6 +47,19 @@ Current test model:
 
 ---
 
+## Benchmarked Models
+
+| Model | Parameters | GPU placement | Generation speed | Initial result |
+|---|---:|---|---:|---|
+| Qwen3 8B | 8.2B | 100% GPU | approximately 74–75 tok/s | Faster and more responsive |
+| Gemma 3 12B | 12.2B | 100% GPU | approximately 46–48 tok/s | Stronger initial Finnish-language quality |
+
+Detailed comparison:
+
+- [Qwen3 8B vs. Gemma 3 12B](benchmarks/comparisons/qwen3-8b-vs-gemma3-12b.md)
+
+---
+
 ## Current Architecture
 
 ```text
@@ -79,6 +92,7 @@ A more detailed architecture description is available in the project documentati
 | [`MODELS.md`](docs/MODELS.md) | Language model evaluations |
 | [`BENCHMARKS.md`](docs/BENCHMARKS.md) | Benchmark methodology |
 | [`SECURITY.md`](docs/SECURITY.md) | Security architecture and principles |
+| [Model comparison](benchmarks/comparisons/qwen3-8b-vs-gemma3-12b.md) | First performance and response-quality comparison |
 
 ---
 
@@ -106,6 +120,9 @@ Detailed planning is available in `docs/ROADMAP.md`.
 self-hosted-llm-infrastructure/
 │
 ├── benchmarks/
+│   ├── comparisons/
+│   │   └── qwen3-8b-vs-gemma3-12b.md
+|
 ├── docs/
 │   ├── ARCHITECTURE.md
 │   ├── BENCHMARKS.md
