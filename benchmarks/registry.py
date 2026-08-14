@@ -9,23 +9,25 @@
 #
 # File: benchmarks/registry.py
 # Created: 2026-08-06
-# Version: v0.3.0
+# Version: v0.5.0
 #
 # Purpose:
-# Compare the model registry, installed Ollama models, and
-# automatically detected benchmark result status.
+# Compare persistent registry metadata, installed Ollama models,
+# latest benchmark metadata, and manual quality scores.
 #
 # Workflow:
 # 1. Load and validate models.json.
 # 2. Read installed models from ollama list.
-# 3. Detect benchmarked models from result summaries.
-# 4. Print a combined registry status report.
+# 3. Load latest benchmark metadata for each model.
+# 4. Load manual quality scores from quality_scores.json.
+# 5. Print a combined registry status report.
 #
 # ----------------------------------------------------------------------
 
 """Command-line entry point for the local LLM model registry."""
 
-from registry.benchmarks import detect_benchmarked_models
+from leaderboard.quality import load_quality_scores
+from registry.benchmarks import load_latest_benchmark_metadata
 from registry.loader import load_registry
 from registry.ollama import load_installed_models
 from registry.output import print_registry_summary
@@ -36,22 +38,19 @@ from registry.output import print_registry_summary
 # =============================================================================
 
 def main() -> int:
-    """
-    Load registry, Ollama, and benchmark result data.
-
-    Returns:
-        int: Process exit code. Zero indicates success.
-    """
+    """Load registry, Ollama, benchmark, and quality metadata."""
 
     try:
         registry = load_registry()
         installed_models = load_installed_models()
-        benchmarked_models = detect_benchmarked_models()
+        benchmark_metadata = load_latest_benchmark_metadata()
+        quality_data = load_quality_scores()
 
         print_registry_summary(
             registry=registry,
             installed_models=installed_models,
-            benchmarked_models=benchmarked_models,
+            benchmark_metadata=benchmark_metadata,
+            quality_data=quality_data,
         )
 
         return 0
