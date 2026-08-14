@@ -1,0 +1,44 @@
+{
+  "benchmark_timestamp": "2026-08-14T11:15:21.916932+03:00",
+  "batch_timestamp": "20260814-111325",
+  "run_number": 1,
+  "total_runs": 1,
+  "prompt_name": "networking.md",
+  "model": "phi4:14b",
+  "think_enabled": false,
+  "run_type": "warm",
+  "context_size": 4096,
+  "temperature": 0,
+  "seed": 42,
+  "environment": {
+    "operating_system": "Windows-11-10.0.26200-SP0",
+    "python_version": "3.13.15",
+    "python_implementation": "CPython",
+    "machine_architecture": "AMD64",
+    "ollama_version": "0.32.9",
+    "model": {
+      "name": "phi4:14b",
+      "format": "gguf",
+      "family": "phi3",
+      "families": [
+        "phi3"
+      ],
+      "parameter_size": "14.7B",
+      "quantization_level": "Q4_K_M",
+      "context_length": 16384
+    }
+  },
+  "prompt": "Explain the difference between a router, a managed Ethernet switch and a wireless access point.\n\nDescribe the role of each device in a small home network and give a practical example of how they can be connected together.",
+  "response": "In a small home network, routers, managed Ethernet switches, and wireless access points play distinct roles to ensure efficient communication between devices both within the local network and with external networks like the internet.\n\n### Router\n\n**Role:**\n- A router is responsible for directing data packets between different networks. It connects your home network to the internet by routing traffic from your local devices to external destinations.\n- Routers typically provide a firewall, NAT (Network Address Translation), DHCP (Dynamic Host Configuration Protocol) services, and sometimes VPN capabilities.\n\n**Example in Home Network:**\n- In a small home network, the router is usually connected directly to the modem provided by an Internet Service Provider (ISP). It assigns local IP addresses to devices on your network and manages traffic between these devices and the internet.\n\n### Managed Ethernet Switch\n\n**Role:**\n- A managed Ethernet switch connects multiple wired devices within a local area network (LAN) and allows for more control over data flow compared to unmanaged switches.\n- Features include VLANs (Virtual Local Area Networks), QoS (Quality of Service), port mirroring, and SNMP (Simple Network Management Protocol).\n\n**Example in Home Network:**\n- In a home setup, a managed switch can be used to connect multiple wired devices such as desktop computers, gaming consoles, or smart TVs. It allows for better management of network traffic and prioritization of certain types of data.\n\n### Wireless Access Point\n\n**Role:**\n- A wireless access point (WAP) provides Wi-Fi connectivity to devices that do not have Ethernet ports.\n- It connects to the router via an Ethernet cable and broadcasts a wireless signal, allowing devices like smartphones, tablets, and laptops to connect to the network wirelessly.\n\n**Example in Home Network:**\n- In a home environment, a WAP can be used to extend Wi-Fi coverage throughout different rooms or floors. It is particularly useful if the router's built-in Wi-Fi does not cover all areas of the house effectively.\n\n### Connecting Them Together\n\nHere’s how these devices can be connected together in a practical home network setup:\n\n1. **Router Connection:**\n   - Connect your modem to the WAN (Wide Area Network) port on the router using an Ethernet cable.\n   - The router will manage internet traffic and provide Wi-Fi connectivity if it has built-in wireless capabilities.\n\n2. **Managed Switch Connection:**\n   - Connect the managed switch to one of the LAN ports on the router using another Ethernet cable.\n   - Plug in various wired devices (e.g., desktop computers, smart TVs) into the ports on the managed switch.\n\n3. **Wireless Access Point Connection:**\n   - If additional Wi-Fi coverage is needed, connect a wireless access point to another LAN port on the router with an Ethernet cable.\n   - Position the WAP in an area where Wi-Fi signal needs boosting or extending.\n\nThis setup allows for efficient management of both wired and wireless devices within your home network, ensuring robust connectivity and performance.",
+  "thinking": "",
+  "done_reason": "stop",
+  "metrics": {
+    "total_duration_seconds": 13.261,
+    "load_duration_seconds": 0.086,
+    "prompt_eval_count": 52,
+    "prompt_eval_duration_seconds": 0.073,
+    "eval_count": 599,
+    "eval_duration_seconds": 13.051,
+    "tokens_per_second": 45.9
+  }
+}

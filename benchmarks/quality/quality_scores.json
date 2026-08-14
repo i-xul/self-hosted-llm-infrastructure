@@ -45,6 +45,20 @@
         "python": "Produced a readable basic program, but the timeout was fixed, port conversion errors were not handled and some exception branches were ineffective with connect_ex.",
         "summarization": "Exceeded the five-sentence limit substantially and contained multiple awkward or incorrect Finnish expressions."
       }
-    }
+    },
+    "phi4:14b": {
+      "display_name": "Phi-4 14B",
+      "scores": {
+        "finnish": 7.0,
+        "python": 6.5,
+        "summarization": 4.5
+       },
+       "notes": {
+         "finnish": "Generally understandable and reasonably fluent Finnish, but several expressions were awkward. A separate manual sanity check also incorrectly described Raspberry Pi as a computer emulator and contained additional technical wording problems.",
+         "python": "Produced a clean standard-library solution with argparse and a command-line configurable timeout, but the main function ignores the boolean result from check_port, causing a closed or unreachable port to exit with status code 0 instead of an error code.",
+         "summarization": "Preserved the main benefits, risks and pilot decision reasonably well, but substantially exceeded the five-sentence limit and contained several unnatural or grammatically incorrect Finnish expressions."
+        }
+      }
+   
   }
 }

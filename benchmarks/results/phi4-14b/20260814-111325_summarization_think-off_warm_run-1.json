@@ -1,0 +1,44 @@
+{
+  "benchmark_timestamp": "2026-08-14T11:16:29.553341+03:00",
+  "batch_timestamp": "20260814-111325",
+  "run_number": 1,
+  "total_runs": 1,
+  "prompt_name": "summarization.md",
+  "model": "phi4:14b",
+  "think_enabled": false,
+  "run_type": "warm",
+  "context_size": 4096,
+  "temperature": 0,
+  "seed": 42,
+  "environment": {
+    "operating_system": "Windows-11-10.0.26200-SP0",
+    "python_version": "3.13.15",
+    "python_implementation": "CPython",
+    "machine_architecture": "AMD64",
+    "ollama_version": "0.32.9",
+    "model": {
+      "name": "phi4:14b",
+      "format": "gguf",
+      "family": "phi3",
+      "families": [
+        "phi3"
+      ],
+      "parameter_size": "14.7B",
+      "quantization_level": "Q4_K_M",
+      "context_length": 16384
+    }
+  },
+  "prompt": "Summarize the following text in Finnish.\n\nRequirements:\n\n- Use no more than five sentences.\n- Preserve the main arguments and conclusions.\n- Do not introduce information that is not present in the source text.\n- Use neutral and natural Finnish.\n\nSOURCE TEXT:\n\nA small organization is planning to replace several separate servers with a consolidated virtualization platform. The current environment contains independent systems for file storage, internal web applications, monitoring and backups. Maintaining the servers separately has increased electricity consumption, hardware costs and administrative work.\n\nThe proposed virtualization platform would allow multiple isolated virtual machines to run on fewer physical computers. Supporters of the change argue that centralized management would simplify updates, backups and monitoring. Hardware resources could also be allocated dynamically according to the needs of each service.\n\nHowever, the change introduces new risks. A failure in a virtualization host could affect several services simultaneously. The organization would therefore need reliable backups, tested recovery procedures and sufficient hardware redundancy. Administrators would also require training before the existing production services could be migrated safely.\n\nThe organization has decided to begin with a limited pilot deployment. Non-critical services will be migrated first, and performance, reliability and administrative workload will be evaluated for three months. A wider migration will be considered only if the pilot meets the agreed technical and operational requirements.",
+  "response": "Pieni organisaatio suunnittelee korvata useat erilliset palvelimet yhdistetyllä virtualisointialustalla. Nykyinen ympäristö sisältää itsenäisiä järjestelmiä tiedostojen tallennukseen, sisäisiin verkkosovelluksiin, valvontaan ja varmuuskopioihin. Erillisten palvelinten ylläpito on lisännyt sähkönkulutusta, laitteistokustannuksia ja hallinnollista työtä.\n\nEhdotettu virtualisointialusta mahdollistaisi useiden eristyksissä olevien virtuaalikoneiden toiminnan vähemmän fyysisillä tietokoneilla. Muutoksen kannattajat väittävät, että keskitetty hallinta yksinkertaistaisi päivityksiä, varmuuskopioita ja valvontaa. Laitevarat voidaan myös jakaa dynaamisesti jokaisen palvelun tarpeiden mukaan.\n\nMuutos tuo kuitenkin uusia riskejä: virhe virtualisointi-isäntässä voisi vaikuttaa useita palveluita samanaikaisesti. Organisaatio tarvitsisi luotettavia varmuuskopioita, testattuja palautusprosesseja ja riittävästi laitteistojen redundanssia. Hallintohenkilöstöllä olisi myös tarpeen saada koulutusta ennen kuin olemassa olevat tuotantopalvelut voidaan siirtää turvallisesti.\n\nOrganisaatio on päättänyt aloittaa rajattuun pilotointiin. Ensiksi siirretään ei-kriittisiä palveluita, ja niiden suorituskykyä, luotettavuutta ja hallinnollista työmäärää arvioidaan kolmen kuukauden ajan. Laajempi siirtymä harkitaan vain, jos pilotointi täyttää sovittujen teknisten ja toiminnallisten vaatimusten.",
+  "thinking": "",
+  "done_reason": "stop",
+  "metrics": {
+    "total_duration_seconds": 11.58,
+    "load_duration_seconds": 0.084,
+    "prompt_eval_count": 267,
+    "prompt_eval_duration_seconds": 0.327,
+    "eval_count": 510,
+    "eval_duration_seconds": 11.137,
+    "tokens_per_second": 45.79
+  }
+}

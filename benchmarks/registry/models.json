@@ -15,6 +15,11 @@
             "name": "llama3.1:8b",
             "display_name": "Llama 3.1 8B",
             "family": "llama"
+        },
+        {
+            "name": "phi4:14b",
+            "display_name": "Phi-4 14B",
+            "family": "phi3"
         }
     ]
 }

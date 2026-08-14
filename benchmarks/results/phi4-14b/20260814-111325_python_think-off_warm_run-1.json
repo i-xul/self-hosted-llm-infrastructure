@@ -1,0 +1,44 @@
+{
+  "benchmark_timestamp": "2026-08-14T11:15:42.855443+03:00",
+  "batch_timestamp": "20260814-111325",
+  "run_number": 1,
+  "total_runs": 1,
+  "prompt_name": "python.md",
+  "model": "phi4:14b",
+  "think_enabled": false,
+  "run_type": "warm",
+  "context_size": 4096,
+  "temperature": 0,
+  "seed": 42,
+  "environment": {
+    "operating_system": "Windows-11-10.0.26200-SP0",
+    "python_version": "3.13.15",
+    "python_implementation": "CPython",
+    "machine_architecture": "AMD64",
+    "ollama_version": "0.32.9",
+    "model": {
+      "name": "phi4:14b",
+      "format": "gguf",
+      "family": "phi3",
+      "families": [
+        "phi3"
+      ],
+      "parameter_size": "14.7B",
+      "quantization_level": "Q4_K_M",
+      "context_length": 16384
+    }
+  },
+  "prompt": "Write a complete Python 3 program that checks whether a TCP port is open.\n\nRequirements:\n\n- Accept the hostname and port as command-line arguments.\n- Use only the Python standard library.\n- Use a configurable connection timeout.\n- Handle invalid hostnames and connection errors.\n- Return an appropriate exit code.\n- Include clear error messages.\n- Briefly explain how to run the program.",
+  "response": "Below is a complete Python 3 program that checks whether a TCP port is open, meeting all your specified requirements:\n\n```python\nimport socket\nimport sys\nimport argparse\n\ndef check_port(host, port, timeout):\n    try:\n        # Create a new socket using IPv4 and TCP protocols\n        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:\n            # Set the connection timeout\n            sock.settimeout(timeout)\n            \n            # Attempt to connect to the specified host and port\n            result = sock.connect_ex((host, port))\n            \n            # If result is 0, the port is open\n            if result == 0:\n                print(f\"Port {port} on {host} is open.\")\n                return True\n            else:\n                print(f\"Port {port} on {host} is closed or unreachable.\")\n                return False\n\n    except socket.gaierror:\n        # Handle invalid hostnames\n        print(f\"Error: Invalid hostname '{host}'.\")\n        sys.exit(1)\n    except socket.timeout:\n        # Handle connection timeout\n        print(f\"Error: Connection to {host}:{port} timed out after {timeout} seconds.\")\n        sys.exit(2)\n    except Exception as e:\n        # Handle other exceptions\n        print(f\"An error occurred: {e}\")\n        sys.exit(3)\n\ndef main():\n    parser = argparse.ArgumentParser(description=\"Check if a TCP port is open on a given host.\")\n    \n    # Add command-line arguments for hostname, port, and timeout\n    parser.add_argument(\"host\", type=str, help=\"Hostname or IP address to check\")\n    parser.add_argument(\"port\", type=int, help=\"Port number to check\")\n    parser.add_argument(\"--timeout\", type=float, default=5.0, help=\"Connection timeout in seconds (default: 5.0)\")\n    \n    args = parser.parse_args()\n    \n    # Call the function with parsed arguments\n    check_port(args.host, args.port, args.timeout)\n\nif __name__ == \"__main__\":\n    main()\n```\n\n### Explanation\n\n- **Command-line Arguments**: The program uses `argparse` to handle command-line inputs. It requires a hostname and port number as positional arguments and accepts an optional timeout argument.\n  \n- **Socket Connection**: It creates a TCP socket using `socket.AF_INET` for IPv4 and `socket.SOCK_STREAM` for TCP.\n\n- **Timeout Handling**: The connection timeout is configurable via the `--timeout` option, defaulting to 5 seconds if not specified.\n\n- **Error Handling**:\n  - `socket.gaierror`: Catches invalid hostnames.\n  - `socket.timeout`: Handles cases where the connection attempt times out.\n  - General exceptions are caught and reported for any other errors.\n\n- **Exit Codes**:\n  - `0` indicates success (port is open).\n  - `1` for an invalid hostname.\n  - `2` for a timeout error.\n  - `3` for any other exception.\n\n### How to Run the Program\n\n1. Save the script to a file, e.g., `check_port.py`.\n2. Open a terminal or command prompt.\n3. Navigate to the directory containing the script.\n4. Run the program using Python:\n\n   ```bash\n   python check_port.py <hostname> <port> [--timeout <seconds>]\n   ```\n\n   Replace `<hostname>` with the target host, `<port>` with the port number you want to check, and optionally specify a timeout in seconds.\n\nExample usage:\n\n```bash\npython check_port.py example.com 80 --timeout 10\n```\n\nThis command checks if port 80 on `example.com` is open, with a connection timeout of 10 seconds.",
+  "thinking": "",
+  "done_reason": "stop",
+  "metrics": {
+    "total_duration_seconds": 16.928,
+    "load_duration_seconds": 0.086,
+    "prompt_eval_count": 86,
+    "prompt_eval_duration_seconds": 0.116,
+    "eval_count": 764,
+    "eval_duration_seconds": 16.688,
+    "tokens_per_second": 45.78
+  }
+}

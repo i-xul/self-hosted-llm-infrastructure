@@ -1,0 +1,44 @@
+{
+  "benchmark_timestamp": "2026-08-14T11:14:45.837214+03:00",
+  "batch_timestamp": "20260814-111325",
+  "run_number": 1,
+  "total_runs": 1,
+  "prompt_name": "finnish.md",
+  "model": "phi4:14b",
+  "think_enabled": false,
+  "run_type": "cold",
+  "context_size": 4096,
+  "temperature": 0,
+  "seed": 42,
+  "environment": {
+    "operating_system": "Windows-11-10.0.26200-SP0",
+    "python_version": "3.13.15",
+    "python_implementation": "CPython",
+    "machine_architecture": "AMD64",
+    "ollama_version": "0.32.9",
+    "model": {
+      "name": "phi4:14b",
+      "format": "gguf",
+      "family": "phi3",
+      "families": [
+        "phi3"
+      ],
+      "parameter_size": "14.7B",
+      "quantization_level": "Q4_K_M",
+      "context_length": 16384
+    }
+  },
+  "prompt": "Vastaa suomeksi.\n\nSelitä noin 150 sanalla, mikä Raspberry Pi on, mihin sitä käytetään ja miksi se on suosittu harrastajien keskuudessa.\n\nKäytä luonnollista ja selkeää yleiskieltä.",
+  "response": "Raspberry Pi on pienikokoinen tietokone, joka on suunniteltu olevan edullinen ja energiatehokas. Se on noin koko korttipakkaus, ja sen voi asentaa esimerkiksi pöytään tai kiinnittää seinälle. Raspberry Pi käyttää pieniä prosessoreita ja muistia, mutta se kykenee suorittamaan monenlaisia tehtäviä, kuten ohjelmointia, verkkopalveluita ja multimedia-applikaatioita.\n\nRaspberry Pi on erityisen suosittu harrastajien keskuudessa sen joustavuuden vuoksi. Sen avulla voi rakentaa monenlaisia projekteja, kuten kotitekoisia älypuhelimia, verkkopeliservereitä tai automaatiojärjestelmiä. Lisäksi Raspberry Pi on erinomainen työkalu ohjelmointiin ja tietotekniikan opiskeluun, sillä se tukee useita ohjelmointikieliä ja alustoja.\n\nYksi syy sen suosioon on myös sen avoimen lähdekoodin yhteisön aktiivisuus. Ympäri maailmaa on lukuisia harrastajia, jotka jakavat ohjelmistojaan ja projektejaan verkossa, mikä tekee Raspberry Pi:stä helposti lähestyttävän uusille käyttäjille.\n\nKaiken kaikkiaan Raspberry Pi tarjoaa edullisen tavan tutustua tietotekniikkaan ja kehittää omia projekteja ilman suuria investointeja. Se on sekä oppimisympäristö että luova työkalu, mikä tekee siitä erityisen houkuttelevan monille harrastajille.",
+  "thinking": "",
+  "done_reason": "stop",
+  "metrics": {
+    "total_duration_seconds": 71.902,
+    "load_duration_seconds": 62.078,
+    "prompt_eval_count": 79,
+    "prompt_eval_duration_seconds": 0.16,
+    "eval_count": 446,
+    "eval_duration_seconds": 9.662,
+    "tokens_per_second": 46.16
+  }
+}
