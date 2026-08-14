@@ -26,24 +26,39 @@ This repository focuses on the infrastructure surrounding local AI rather than a
 
 ## Current Status
 
-**Current milestone:** Phase 1 – Local GPU Inference
+**Current milestone:** Phase 2 – Multi-Model Laboratory and Local Web Interface
 
 Completed:
 
 * ✔ Ollama installed on Windows 11
-* ✔ Local model storage configured
-* ✔ Local REST API verified
-* ✔ First language model successfully deployed
-* ✔ GPU acceleration verified
-* ✔ Initial documentation completed
+* ✔ Dedicated local model storage configured
+* ✔ Local Ollama REST API verified
+* ✔ AMD GPU acceleration verified
+* ✔ Four local language models deployed and benchmarked
+* ✔ Repeatable benchmark framework implemented
+* ✔ Performance leaderboard implemented
+* ✔ Manual response-quality evaluation implemented
+* ✔ Local model registry implemented
+* ✔ Docker Desktop with WSL 2 backend installed and verified
+* ✔ Open WebUI deployed as a Docker container
+* ✔ Open WebUI connected successfully to the Windows-hosted Ollama service
+* ✔ Browser-based inference verified with 100% GPU model execution
 
 Current inference engine:
 
 * Ollama
 
-Current test model:
+Current interface:
+
+* Open WebUI
+* Ollama CLI and local REST API remain available for testing and administration
+
+Currently benchmarked models:
 
 * Qwen3 8B
+* Gemma 3 12B
+* Llama 3.1 8B
+* Phi-4 14B
 
 ---
 
@@ -96,20 +111,35 @@ The registry reports:
 ## Current Architecture
 
 ```text
-                 User
-                   │
-                   ▼
-          Ollama Command Line
-                   │
-                   ▼
-             Ollama Local API
-                   │
-                   ▼
-               Qwen3 8B
-                   │
-                   ▼
-        AMD Radeon RX 7800 XT
+              Browser
+                 │
+                 ▼
+             Open WebUI
+        Docker Desktop / WSL 2
+          localhost:3000
+                 │
+                 │ host.docker.internal:11434
+                 ▼
+               Ollama
+          Windows 11 host
+                 │
+                 ▼
+        Local language models
+                 │
+                 ▼
+      AMD Radeon RX 7800 XT
+            16 GB VRAM
 ```
+
+Open WebUI provides the browser-based interface while Ollama remains installed directly on the Windows 11 host and performs model inference using the AMD GPU.
+
+The Open WebUI container reaches the host Ollama service through:
+
+```text
+http://host.docker.internal:11434
+```
+
+Ollama is intentionally kept outside the Open WebUI container so that the existing Windows GPU inference environment remains independent from the interface layer.
 
 A more detailed architecture description is available in the project documentation.
 
