@@ -39,8 +39,10 @@ Benchmark status is derived from the master-summary files under `benchmarks/resu
 
 | Model | Parameters | Quantization | GPU placement | Status | Comparison |
 |---|---:|---|---|---|---|
-| Qwen3 8B | 8.2B | Q4_K_M | 100% GPU | Benchmarked | [Qwen3 8B vs. Gemma 3 12B](../benchmarks/comparisons/qwen3-8b-vs-gemma3-12b.md) |
-| Gemma 3 12B | 12.2B | Q4_K_M | 100% GPU | Benchmarked | [Qwen3 8B vs. Gemma 3 12B](../benchmarks/comparisons/qwen3-8b-vs-gemma3-12b.md) |
+| Qwen3 8B | 8.2B | Q4_K_M | 100% GPU | Benchmarked | [Four-model comparison](../benchmarks/comparisons/qwen3-vs-gemma3-vs-llama3.1-vs-phi4.md) |
+| Gemma 3 12B | 12.2B | Q4_K_M | 100% GPU | Benchmarked | [Four-model comparison](../benchmarks/comparisons/qwen3-vs-gemma3-vs-llama3.1-vs-phi4.md) |
+| Llama 3.1 8B | 8.0B | Q4_K_M | 100% GPU | Benchmarked | [Four-model comparison](../benchmarks/comparisons/qwen3-vs-gemma3-vs-llama3.1-vs-phi4.md) |
+| Phi-4 14B | 14.7B | Q4_K_M | 100% GPU | Benchmarked | [Four-model comparison](../benchmarks/comparisons/qwen3-vs-gemma3-vs-llama3.1-vs-phi4.md) |
 
 ## Performance Leaderboard
 

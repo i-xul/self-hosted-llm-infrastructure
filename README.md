@@ -53,10 +53,13 @@ Current test model:
 |---|---:|---|---:|---|
 | Qwen3 8B | 8.2B | 100% GPU | approximately 74–75 tok/s | Faster and more responsive |
 | Gemma 3 12B | 12.2B | 100% GPU | approximately 46–48 tok/s | Stronger initial Finnish-language quality |
+| Llama 3.1 8B | 8.0B | 100% GPU | approximately 78 tok/s | Fastest tested model, but weakest current quality score |
+| Phi-4 14B | 14.7B | 100% GPU | approximately 46 tok/s | Stronger Finnish than Qwen3, but weaker overall quality |
 
 Detailed comparison:
 
-- [Qwen3 8B vs. Gemma 3 12B](benchmarks/comparisons/qwen3-8b-vs-gemma3-12b.md)
+- [Qwen3 8B vs. Gemma 3 12B vs. Llama 3.1 8B vs. Phi-4 14B](benchmarks/comparisons/qwen3-vs-gemma3-vs-llama3.1-vs-phi4.md)
+- [Earlier comparison: Qwen3 8B vs. Gemma 3 12B](benchmarks/comparisons/qwen3-8b-vs-gemma3-12b.md)
 - [Local LLM Performance Leaderboard](benchmarks/LEADERBOARD.md)
 
 ---

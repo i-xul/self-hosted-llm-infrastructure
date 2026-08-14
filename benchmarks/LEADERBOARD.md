@@ -42,4 +42,7 @@ Quality scale: 1.0–10.0, step 0.5.
 
 ## Quality Comparisons
 
-- [Qwen3 8B vs. Gemma 3 12B](comparisons/qwen3-8b-vs-gemma3-12b.md)
+Performance metrics should be interpreted together with manual response-quality evaluations.
+
+- [Four-model comparison: Qwen3 8B vs. Gemma 3 12B vs. Llama 3.1 8B vs. Phi-4 14B](comparisons/qwen3-vs-gemma3-vs-llama3.1-vs-phi4.md)
+- [Earlier comparison: Qwen3 8B vs. Gemma 3 12B](comparisons/qwen3-8b-vs-gemma3-12b.md)

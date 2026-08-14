@@ -177,7 +177,11 @@ def build_leaderboard_markdown(
         "- Manual scores are preliminary human evaluations, not objective facts.\n"
         "\n"
         "## Quality Comparisons\n\n"
-        "- [Qwen3 8B vs. Gemma 3 12B]"
+        "Performance metrics should be interpreted together with manual "
+        "response-quality evaluations.\n\n"
+        "- [Four-model comparison: Qwen3 8B vs. Gemma 3 12B vs. Llama 3.1 8B vs. Phi-4 14B]"
+        "(comparisons/qwen3-vs-gemma3-vs-llama3.1-vs-phi4.md)\n"
+        "- [Earlier comparison: Qwen3 8B vs. Gemma 3 12B]"
         "(comparisons/qwen3-8b-vs-gemma3-12b.md)\n"
     )
 
