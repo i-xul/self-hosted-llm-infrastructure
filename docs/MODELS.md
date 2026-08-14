@@ -4,6 +4,37 @@ This document tracks every language model evaluated during this project.
 
 The objective is not to identify a single "best" model, but to understand the strengths, limitations and resource requirements of different open-source models running entirely on local hardware.
 
+## Model Registry
+
+The model registry provides a consolidated view of the models managed by this project.
+
+Persistent model metadata is stored in:
+
+```text
+benchmarks/registry/models.json
+```
+
+Runtime and benchmark status are detected automatically.
+
+The registry currently combines:
+
+- registered model metadata
+- locally installed Ollama models
+- benchmark completion status
+- latest benchmark date
+- thinking mode
+- repeat count
+- average generation speed
+- manual overall quality score
+
+Run:
+
+```powershell
+python .\benchmarks\registry.py
+```
+
+Benchmark status is derived from the master-summary files under `benchmarks/results/`, so it does not need to be maintained manually in `models.json`.
+
 ## Tested Models
 
 | Model | Parameters | Quantization | GPU placement | Status | Comparison |

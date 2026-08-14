@@ -61,6 +61,35 @@ Detailed comparison:
 
 ---
 
+## Model Registry
+
+The project includes a local model registry that combines information from:
+
+- the version-controlled model registry
+- models currently installed in Ollama
+- completed benchmark master summaries
+- manual quality evaluations
+
+Run the registry with:
+
+```powershell
+python .\benchmarks\registry.py
+```
+
+The registry reports:
+
+- registered and installed models
+- registered models missing from Ollama
+- installed models missing from the registry
+- benchmark status
+- latest benchmark date
+- thinking mode
+- repeat count
+- average generation speed
+- manual overall quality score
+
+---
+
 ## Current Architecture
 
 ```text
@@ -128,6 +157,14 @@ self-hosted-llm-infrastructure/
 │   ├── comparisons/
 │   │   └── qwen3-8b-vs-gemma3-12b.md
 │   ├── prompts/
+│   ├── registry.py
+│   ├── registry/
+│   │   ├── __init__.py
+│   │   ├── benchmarks.py
+│   │   ├── loader.py
+│   │   ├── models.json
+│   │   ├── ollama.py
+│   │   └── output.py
 │   └── results/
 |
 ├── docs/
