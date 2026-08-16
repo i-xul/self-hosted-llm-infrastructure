@@ -43,6 +43,7 @@ Completed:
 * ✔ Open WebUI deployed as a Docker container
 * ✔ Open WebUI connected successfully to the Windows-hosted Ollama service
 * ✔ Browser-based inference verified with 100% GPU model execution
+* ✔ Open WebUI access and GPU-accelerated inference verified from another private LAN device
 
 Current inference engine:
 

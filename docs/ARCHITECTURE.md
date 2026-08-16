@@ -199,6 +199,35 @@ Current implementation:
 * Ollama provides its API on TCP port `11434`
 * Local browser access to Open WebUI has been verified
 * Direct public internet exposure is not part of the architecture
+* Open WebUI access from another device on the private LAN has been verified
+* Windows Firewall allows inbound TCP port `3000` on the Private network profile
+
+Current verified LAN path:
+
+```text
+LAN client
+    │
+    │ TCP 3000
+    ▼
+Windows 11 host
+    │
+    ▼
+Open WebUI
+Docker Desktop / WSL 2
+    │
+    │ host.docker.internal:11434
+    ▼
+Ollama
+    │
+    ▼
+Qwen3 8B
+    │
+    ▼
+AMD Radeon RX 7800 XT
+100% GPU
+```
+
+The complete browser-to-GPU path has been verified from a separate LAN device.
 
 Planned private access methods:
 
