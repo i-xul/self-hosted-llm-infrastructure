@@ -21,16 +21,16 @@ Build a fully functional local inference environment on a Windows 11 workstation
 * [x] Verify GPU acceleration on AMD Radeon RX 7800 XT
 * [x] Create the initial GitHub repository
 * [x] Create the documentation structure
+* [x] Create repeatable benchmark prompts
+* [x] Compare reasoning vs. non-reasoning modes
+* [x] Evaluate additional language models
+* [x] Measure response latency
+* [x] Measure generation speed
 
 ### Planned
 
-* [ ] Create repeatable benchmark prompts
-* [ ] Compare reasoning vs. non-reasoning modes
-* [ ] Evaluate additional language models
 * [ ] Measure GPU memory usage
 * [ ] Measure system memory usage
-* [ ] Measure response latency
-* [ ] Measure generation speed
 
 ---
 
@@ -40,15 +40,18 @@ Build a fully functional local inference environment on a Windows 11 workstation
 
 Transform the project from a single-model setup into a reusable local AI laboratory.
 
+### Completed
+
+* [x] Test additional open-source models
+* [x] Compare different model sizes
+* [x] Compare Finnish language quality
+* [x] Compare programming capabilities
+* [x] Compare summarization quality
+* [x] Document strengths and weaknesses of each model
+
 ### Planned
 
-* [ ] Test additional open-source models
-* [ ] Compare different model sizes
-* [ ] Compare Finnish language quality
-* [ ] Compare programming capabilities
-* [ ] Compare summarization quality
-* [ ] Compare reasoning quality
-* [ ] Document strengths and weaknesses of each model
+* [ ] Compare reasoning quality across models
 
 ---
 
@@ -73,7 +76,7 @@ Compare different local inference engines.
 
 ## Objective
 
-Separate the inference node from the user interface.
+Provide secure network access to the local AI interface while keeping inference services protected from unnecessary network exposure.
 
 ### Planned
 
@@ -94,12 +97,15 @@ Separate the inference node from the user interface.
 
 Provide a dedicated browser-based interface.
 
+### Completed
+
+* [x] Deploy Open WebUI
+* [x] Connect to the Windows inference node
+* [x] Configure Open WebUI authentication
+
 ### Planned
 
-* [ ] Deploy Open WebUI
-* [ ] Connect to the Windows inference node
 * [ ] Add HTTPS
-* [ ] Configure authentication
 * [ ] Support multiple users (if needed)
 
 ---
