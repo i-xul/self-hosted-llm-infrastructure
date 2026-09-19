@@ -61,6 +61,7 @@ def build_result_record(
     total_runs: int,
     batch_timestamp: str,
     environment: dict[str, Any],
+    resources: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """
     Build one normalized benchmark result record.
@@ -81,6 +82,7 @@ def build_result_record(
         "temperature": TEMPERATURE,
         "seed": SEED,
         "environment": environment,
+        "resources": resources,
         "prompt": prompt_text,
         "response": result.get("response", ""),
         "thinking": result.get("thinking", ""),
@@ -145,6 +147,78 @@ def _build_statistics(
     }
 
 
+def _build_resource_statistics_for_records(
+    records: list[dict[str, Any]],
+) -> dict[str, dict[str, float | None]]:
+    """
+    Build aggregate RAM and inference-GPU VRAM statistics for a set of runs.
+
+    Missing resource measurements are ignored so benchmark summaries can
+    still be generated if resource monitoring was unavailable for one or
+    more individual runs.
+    """
+
+    system_memory_peaks: list[float | None] = []
+    system_memory_peak_deltas: list[float | None] = []
+    inference_gpu_peaks: list[float | None] = []
+    inference_gpu_peak_deltas: list[float | None] = []
+
+    for record in records:
+        resources = record.get("resources")
+
+        if not resources:
+            continue
+
+        system_memory = resources.get("system_memory")
+        if system_memory:
+            system_memory_peaks.append(system_memory.get("peak_gib"))
+            system_memory_peak_deltas.append(
+                system_memory.get("peak_delta_gib")
+            )
+
+        inference_gpu = resources.get("inference_gpu")
+        if inference_gpu:
+            inference_gpu_peaks.append(inference_gpu.get("peak_gib"))
+            inference_gpu_peak_deltas.append(
+                inference_gpu.get("peak_delta_gib")
+            )
+
+    return {
+        "system_memory_peak_gib": summarize_numeric_values(
+            system_memory_peaks
+        ),
+        "system_memory_peak_delta_gib": summarize_numeric_values(
+            system_memory_peak_deltas
+        ),
+        "inference_gpu_peak_gib": summarize_numeric_values(
+            inference_gpu_peaks
+        ),
+        "inference_gpu_peak_delta_gib": summarize_numeric_values(
+            inference_gpu_peak_deltas
+        ),
+    }
+
+
+def _build_resource_statistics(
+    records: list[dict[str, Any]],
+) -> dict[str, Any]:
+    """
+    Build separate resource statistics for cold and warm benchmark runs.
+    """
+
+    cold_records = [
+        record for record in records if record.get("run_type") == "cold"
+    ]
+    warm_records = [
+        record for record in records if record.get("run_type") == "warm"
+    ]
+
+    return {
+        "cold": _build_resource_statistics_for_records(cold_records),
+        "warm": _build_resource_statistics_for_records(warm_records),
+    }
+
+
 # =============================================================================
 # Prompt-level repeated-run summaries
 # =============================================================================
@@ -179,6 +253,7 @@ def build_summary_record(
             record["run_type"] == "warm" for record in records
         ),
         "statistics": _build_statistics(records),
+        "resource_statistics": _build_resource_statistics(records),
         "runs": [
             {
                 "run_number": record["run_number"],

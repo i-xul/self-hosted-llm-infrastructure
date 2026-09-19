@@ -26,11 +26,8 @@ Build a fully functional local inference environment on a Windows 11 workstation
 * [x] Evaluate additional language models
 * [x] Measure response latency
 * [x] Measure generation speed
-
-### Planned
-
-* [ ] Measure GPU memory usage
-* [ ] Measure system memory usage
+* [x] Measure GPU memory usage
+* [x] Measure system memory usage
 
 ---
 

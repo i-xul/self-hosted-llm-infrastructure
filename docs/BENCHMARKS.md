@@ -214,6 +214,27 @@ Warm runs are used for comparing response generation speed and reasoning modes b
 
 ---
 
+## Resource Monitoring
+
+The benchmark runner automatically records system RAM and dedicated GPU VRAM usage during each benchmark run.
+
+Resource monitoring records:
+
+* resource usage before inference begins
+* peak resource usage observed during the benchmark
+* resource usage after inference completes
+* the increase from the initial baseline to the observed peak
+
+System RAM usage is measured from Windows physical-memory statistics.
+
+Dedicated GPU VRAM usage is collected from the Windows `GPU Adapter Memory` performance counters. The benchmark runner tracks all reported GPU adapter instances and identifies the inference GPU based primarily on the largest increase in dedicated VRAM usage during the run.
+
+For warm runs, where the model may already be resident in VRAM and therefore produce little or no additional allocation, the adapter with the highest absolute dedicated VRAM usage is used as a fallback.
+
+Resource measurements are sampled periodically during benchmark execution. The current default sampling interval is 250 milliseconds.
+
+Repeated benchmark summaries report RAM and inference-GPU VRAM statistics separately for cold and warm runs. This distinction is important because cold runs include model-loading memory allocation, while warm runs primarily measure resource usage with the model already resident in memory.
+
 ## Initial Qwen3 8B Observation
 
 Initial testing showed approximately:

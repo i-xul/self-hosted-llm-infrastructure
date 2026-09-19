@@ -38,6 +38,7 @@ from typing import Any
 from lib.api import DEFAULT_API_URL, call_ollama, detect_run_type
 from lib.environment import collect_environment_metadata
 from lib.prompts import list_prompt_paths, read_prompt, resolve_prompt_path
+from lib.resources import ResourceSampler
 from lib.reports import (
     write_json_result,
     write_markdown_result,
@@ -190,13 +191,30 @@ def run_single_benchmark(
     print(f"Run type: {run_type}")
     print("Running benchmark...")
 
-    result = call_ollama(
-        api_url=api_url,
-        model=model,
-        prompt=prompt_text,
-        think_enabled=think_enabled,
-        timeout=timeout,
-    )
+    resource_sampler = ResourceSampler()
+    resource_data: dict[str, Any] | None = None
+    resource_monitoring_started = False
+
+    try:
+        resource_sampler.start()
+        resource_monitoring_started = True
+    except Exception as error:
+        print(f"Warning: resource monitoring could not be started: {error}")
+
+    try:
+        result = call_ollama(
+            api_url=api_url,
+            model=model,
+            prompt=prompt_text,
+            think_enabled=think_enabled,
+            timeout=timeout,
+        )
+    finally:
+        if resource_monitoring_started:
+            try:
+                resource_data = resource_sampler.stop()
+            except Exception as error:
+                print(f"Warning: resource monitoring failed: {error}")
 
     record = build_result_record(
         result=result,
@@ -209,6 +227,7 @@ def run_single_benchmark(
         total_runs=total_runs,
         batch_timestamp=batch_timestamp,
         environment=environment,
+        resources=resource_data,
     )
 
     model_dir = RESULTS_DIR / safe_path_component(model)

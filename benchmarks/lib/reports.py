@@ -93,6 +93,95 @@ def write_json_result(
     return _write_json(record, output_base)
 
 
+def _resource_usage_markdown(resources: dict[str, Any] | None) -> str:
+    """
+    Format runtime RAM and inference-GPU VRAM usage as Markdown.
+    """
+
+    if not resources:
+        return (
+            "## Resource Usage\n\n"
+            "Resource monitoring was unavailable for this benchmark run.\n\n"
+        )
+
+    system_memory = resources.get("system_memory")
+    inference_gpu = resources.get("inference_gpu")
+    sampling_error = resources.get("sampling_error")
+
+    rows: list[str] = []
+
+    if system_memory:
+        rows.append(
+            "| System RAM | "
+            f'{system_memory["before_gib"]} GiB | '
+            f'{system_memory["peak_gib"]} GiB | '
+            f'{system_memory["after_gib"]} GiB | '
+            f'{system_memory["peak_delta_gib"]} GiB |'
+        )
+
+    if inference_gpu:
+        rows.append(
+            "| Inference GPU VRAM | "
+            f'{inference_gpu["before_gib"]} GiB | '
+            f'{inference_gpu["peak_gib"]} GiB | '
+            f'{inference_gpu["after_gib"]} GiB | '
+            f'{inference_gpu["peak_delta_gib"]} GiB |'
+        )
+
+    if not rows:
+        rows.append("| No resource data available | - | - | - | - |")
+
+    markdown = (
+        "## Resource Usage\n\n"
+        "| Resource | Before | Peak | After | Peak delta |\n"
+        "|---|---:|---:|---:|---:|\n"
+        + "\n".join(rows)
+        + "\n\n"
+    )
+
+    if sampling_error:
+        markdown += (
+            f"Resource monitoring warning: `{sampling_error}`\n\n"
+        )
+
+    return markdown
+
+
+def _resource_statistics_markdown(
+    title: str,
+    statistics: dict[str, dict[str, float | None]],
+) -> str:
+    """
+    Format aggregate resource statistics as a Markdown table.
+    """
+
+    return (
+        f"## {title}\n\n"
+        "| Resource metric | Mean | Median | Minimum | Maximum |\n"
+        "|---|---:|---:|---:|---:|\n"
+        "| System RAM peak (GiB) | "
+        f'{statistics["system_memory_peak_gib"]["mean"]} | '
+        f'{statistics["system_memory_peak_gib"]["median"]} | '
+        f'{statistics["system_memory_peak_gib"]["minimum"]} | '
+        f'{statistics["system_memory_peak_gib"]["maximum"]} |\n'
+        "| System RAM peak delta (GiB) | "
+        f'{statistics["system_memory_peak_delta_gib"]["mean"]} | '
+        f'{statistics["system_memory_peak_delta_gib"]["median"]} | '
+        f'{statistics["system_memory_peak_delta_gib"]["minimum"]} | '
+        f'{statistics["system_memory_peak_delta_gib"]["maximum"]} |\n'
+        "| Inference GPU VRAM peak (GiB) | "
+        f'{statistics["inference_gpu_peak_gib"]["mean"]} | '
+        f'{statistics["inference_gpu_peak_gib"]["median"]} | '
+        f'{statistics["inference_gpu_peak_gib"]["minimum"]} | '
+        f'{statistics["inference_gpu_peak_gib"]["maximum"]} |\n'
+        "| Inference GPU VRAM peak delta (GiB) | "
+        f'{statistics["inference_gpu_peak_delta_gib"]["mean"]} | '
+        f'{statistics["inference_gpu_peak_delta_gib"]["median"]} | '
+        f'{statistics["inference_gpu_peak_delta_gib"]["minimum"]} | '
+        f'{statistics["inference_gpu_peak_delta_gib"]["maximum"]} |\n\n'
+    )
+
+
 def write_markdown_result(
     record: dict[str, Any],
     output_base: Path,
@@ -142,13 +231,14 @@ def write_markdown_result(
         f'| Generated tokens | {metrics["eval_count"]} |\n'
         f'| Generation duration | {metrics["eval_duration_seconds"]} s |\n'
         f'| Generation speed | {metrics["tokens_per_second"]} tokens/s |\n\n'
-        "## Prompt\n\n"
+        + _resource_usage_markdown(record.get("resources"))
+        + "## Prompt\n\n"
         "```text\n"
         f'{record["prompt"]}\n'
         "```\n\n"
         "## Response\n\n"
         f'{record["response"].strip()}\n'
-        f"{thinking_section}\n"
+        f"{thinking_section}"
     )
 
     output_path = output_base.with_suffix(".md")
@@ -181,6 +271,7 @@ def write_summary_markdown(
     """
 
     stats = summary["statistics"]
+    resource_stats = summary.get("resource_statistics", {})
     think_label = "on" if summary["think_enabled"] else "off"
 
     run_rows = "\n".join(
@@ -223,7 +314,23 @@ def write_summary_markdown(
         f'{stats["tokens_per_second"]["median"]} | '
         f'{stats["tokens_per_second"]["minimum"]} | '
         f'{stats["tokens_per_second"]["maximum"]} |\n\n'
-        "## Individual Runs\n\n"
+        + (
+            _resource_statistics_markdown(
+                "Cold Run Resource Statistics",
+                resource_stats["cold"],
+            )
+            if resource_stats.get("cold")
+            else ""
+        )
+        + (
+            _resource_statistics_markdown(
+                "Warm Run Resource Statistics",
+                resource_stats["warm"],
+            )
+            if resource_stats.get("warm")
+            else ""
+        )
+        + "## Individual Runs\n\n"
         "| Run | Type | Total duration | Load duration | "
         "Generated tokens | Generation speed |\n"
         "|---:|---|---:|---:|---:|---:|\n"
