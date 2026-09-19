@@ -13,12 +13,12 @@ Performance and manually evaluated response quality are ranked separately becaus
 
 ## Manual Quality Ranking
 
-| Rank | Model | Finnish | Python | Summarization | Overall |
-|---:|---|---:|---:|---:|---:|
-| 1 | Gemma 3 12B | 8.5/10 | 7.5/10 | 8.0/10 | 8.0/10 |
-| 2 | Qwen3 8B | 6.0/10 | 7.0/10 | 6.0/10 | 6.3/10 |
-| 3 | Phi-4 14B | 7.0/10 | 6.5/10 | 4.5/10 | 6.0/10 |
-| 4 | Llama 3.1 8B | 4.0/10 | 6.0/10 | 3.0/10 | 4.3/10 |
+| Rank | Model | Finnish | Python | Summarization | Reasoning | Overall |
+|---:|---|---:|---:|---:|---:|---:|
+| 1 | Gemma 3 12B | 8.5/10 | 7.5/10 | 8.0/10 | 7.0/10 | 7.8/10 |
+| 2 | Phi-4 14B | 7.0/10 | 6.5/10 | 4.5/10 | 9.0/10 | 6.8/10 |
+| 3 | Qwen3 8B | 6.0/10 | 7.0/10 | 6.0/10 | 8.0/10 | 6.8/10 |
+| 4 | Llama 3.1 8B | 4.0/10 | 6.0/10 | 3.0/10 | 5.5/10 | 4.6/10 |
 
 Quality scale: 1.0–10.0, step 0.5.
 

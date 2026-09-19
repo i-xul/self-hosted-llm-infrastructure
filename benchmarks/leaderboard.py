@@ -15,7 +15,9 @@
 # Generate a Markdown leaderboard from benchmark and quality data.
 #
 # Workflow:
-# 1. Load benchmark summaries.\n# 2. Load quality scores.\n# 3. Generate LEADERBOARD.md.
+# 1. Load benchmark summaries.
+# 2. Load quality scores.
+# 3. Generate LEADERBOARD.md.
 #
 # ----------------------------------------------------------------------
 

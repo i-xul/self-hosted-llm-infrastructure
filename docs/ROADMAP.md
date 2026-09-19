@@ -45,10 +45,7 @@ Transform the project from a single-model setup into a reusable local AI laborat
 * [x] Compare programming capabilities
 * [x] Compare summarization quality
 * [x] Document strengths and weaknesses of each model
-
-### Planned
-
-* [ ] Compare reasoning quality across models
+* [x] Compare reasoning quality across models
 
 ---
 

@@ -2,7 +2,7 @@
 
 This document compares four local language models on the same Windows 11 workstation using Ollama, identical benchmark prompts and the same benchmark configuration.
 
-The comparison combines automatically collected performance metrics with preliminary manual evaluations of Finnish-language quality, Python programming and summarization.
+The comparison combines automatically collected performance metrics with preliminary manual evaluations of Finnish-language quality, Python programming, summarization and reasoning.
 
 ## Test Environment
 
@@ -52,12 +52,12 @@ The cold-start results should be interpreted partly as model-loading measurement
 
 ## Manual Quality Ranking
 
-| Rank | Model | Finnish | Python | Summarization | Overall |
-|---:|---|---:|---:|---:|---:|
-| 1 | Gemma 3 12B | 8.5/10 | 7.5/10 | 8.0/10 | 8.0/10 |
-| 2 | Qwen3 8B | 6.0/10 | 7.0/10 | 6.0/10 | 6.3/10 |
-| 3 | Phi-4 14B | 7.0/10 | 6.5/10 | 4.5/10 | 6.0/10 |
-| 4 | Llama 3.1 8B | 4.0/10 | 6.0/10 | 3.0/10 | 4.3/10 |
+| Rank | Model | Finnish | Python | Summarization | Reasoning | Overall |
+|---:|---|---:|---:|---:|---:|---:|
+| 1 | Gemma 3 12B | 8.5/10 | 7.5/10 | 8.0/10 | 7.0/10 | 7.8/10 |
+| 2 | Phi-4 14B | 7.0/10 | 6.5/10 | 4.5/10 | 9.0/10 | 6.8/10 |
+| 3 | Qwen3 8B | 6.0/10 | 7.0/10 | 6.0/10 | 8.0/10 | 6.8/10 |
+| 4 | Llama 3.1 8B | 4.0/10 | 6.0/10 | 3.0/10 | 5.5/10 | 4.6/10 |
 
 The scores are preliminary human evaluations based on selected benchmark responses. They are not objective or comprehensive model-quality measurements.
 
@@ -165,45 +165,98 @@ Gemma 3 12B remains the strongest summarization model in the current comparison.
 
 Qwen3 8B is second. Phi-4 14B preserved the content reasonably well but failed an important structural instruction and showed weaker Finnish-language quality.
 
+## Reasoning
+
+Reasoning quality was evaluated using four benchmark tasks covering arithmetic, scheduling, constraint evaluation and technical troubleshooting.
+
+All four models were tested with the same deterministic benchmark configuration. Qwen3 8B was additionally tested with both thinking disabled and thinking enabled because it explicitly supports Ollama's thinking mode.
+
+### Phi-4 14B
+
+Phi-4 produced the most consistently reliable reasoning responses in the current test set.
+
+It correctly handled the storage calculation, maintenance scheduling, server constraint evaluation and Nginx troubleshooting scenario.
+
+The troubleshooting response correctly recognized that an application listening on `127.0.0.1:5000` remains reachable by Nginx running on the same host and therefore does not by itself prevent the proxied LAN request from working.
+
+### Qwen3 8B
+
+Qwen performed strongly with thinking disabled.
+
+It correctly handled the arithmetic, scheduling and constraint tasks and correctly diagnosed the important distinction between direct LAN access to a loopback-bound backend and same-host access through Nginx.
+
+Enabling thinking did not improve the practical result on these benchmark tasks.
+
+The most significant regression occurred in the troubleshooting benchmark. Two thinking-enabled warm runs generated 40,960 tokens and reached the model's configured context limit instead of producing an appropriately concise response.
+
+This demonstrates that explicit reasoning mode can substantially increase latency and token generation without necessarily improving answer quality.
+
+### Gemma 3 12B
+
+Gemma correctly handled the arithmetic and scheduling tasks and selected the correct server in the constraint-evaluation task.
+
+Its main reasoning failure occurred in the Nginx troubleshooting benchmark.
+
+The response incorrectly treated the application's `127.0.0.1:5000` bind address as preventing Nginx on the same server from reaching the backend. In reality, a same-host Nginx process can connect to a service listening on the loopback interface.
+
+### Llama 3.1 8B
+
+Llama handled the basic arithmetic and scheduling tasks correctly but showed significant errors in the more demanding tests.
+
+In the constraint benchmark it repeatedly treated 25 GB of free disk space as satisfying a requirement for at least 40 GB.
+
+In the troubleshooting benchmark it also incorrectly concluded that the loopback-bound backend prevents same-host Nginx proxying.
+
+### Reasoning conclusion
+
+The reasoning benchmarks show substantial differences that are not visible from raw generation speed alone.
+
+Phi-4 14B produced the most consistently correct reasoning responses in the current test set.
+
+Qwen3 8B also performed strongly with thinking disabled, while its explicit thinking mode introduced very large token and latency overhead and showed a severe failure mode in the troubleshooting benchmark.
+
+Gemma 3 12B and Llama 3.1 8B both produced useful results on simpler reasoning tasks but made important technical reasoning errors in the troubleshooting scenario.
+
 ## Workload Recommendations
 
-| Workload | Preliminary recommendation |
-|---|---|
-| Fastest raw generation | Llama 3.1 8B |
-| Fast interactive technical chat | Qwen3 8B |
-| Finnish-language explanations | Gemma 3 12B |
-| Finnish summarization | Gemma 3 12B |
-| Concise technical assistance | Qwen3 8B |
-| Detailed technical guidance | Gemma 3 12B |
-| Lowest storage requirement | Llama 3.1 8B |
-| Best current speed-quality balance | Qwen3 8B |
-| Best current overall quality | Gemma 3 12B |
-| Strong Finnish alternative for further testing | Phi-4 14B |
-| Long-context capability | Gemma 3 12B or Llama 3.1 8B |
+| Workload | Preliminary recommendation | Reason |
+|---|---|---|
+| Fast interactive responses | Llama 3.1 8B | Highest measured generation speed and low warm-response latency |
+| Finnish-language interaction | Gemma 3 12B | Most natural and reliable Finnish in the current manual evaluation |
+| Python programming | Gemma 3 12B / Qwen3 8B | Both produced useful solutions, with Gemma slightly stronger in the current manual evaluation |
+| Summarization | Gemma 3 12B | Best combination of instruction following, content preservation and Finnish-language quality |
+| General reasoning | Phi-4 14B | Most consistently correct across the current arithmetic, scheduling, constraint and troubleshooting tasks |
+| Fast reasoning | Qwen3 8B with thinking disabled | Strong reasoning results combined with substantially higher generation speed than Phi-4 14B |
+| Explicit thinking mode | Qwen3 8B, use selectively | Thinking mode increased token generation and latency substantially and showed a severe runaway-generation failure in the troubleshooting test |
+| General local assistant | Gemma 3 12B or Qwen3 8B | Gemma emphasizes language quality; Qwen emphasizes speed and strong non-thinking reasoning |
 
 ## Speed vs. Quality
 
-The four-model comparison demonstrates why performance and quality should remain separate measurements.
+The benchmark results demonstrate that generation speed and response quality are separate characteristics.
 
-Llama 3.1 8B produces the highest token rate but has the lowest manual quality score.
+Llama 3.1 8B was the fastest model in the measured performance benchmarks, but its manual quality scores were the weakest overall and it made important errors in both constraint evaluation and technical troubleshooting.
 
-Gemma 3 12B is substantially slower but produces the highest-quality responses in the currently evaluated categories.
+Qwen3 8B provides a strong balance between generation speed and response quality. Its non-thinking reasoning performance was particularly strong, while explicit thinking mode introduced substantial overhead without improving the tested answers.
 
-Qwen3 8B occupies the strongest middle position: its generation speed is close to Llama 3.1 8B while its evaluated response quality is considerably higher.
+Gemma 3 12B remains the strongest model for Finnish-language quality and summarization in the current comparison, although its technical troubleshooting result exposed an important reasoning weakness.
 
-Phi-4 14B does not currently establish a clear speed-quality advantage. It is the slowest tested model and its overall manual quality score remains slightly below Qwen3 8B, although its Finnish-language score is stronger.
+Phi-4 14B was slower than the 8B models and weaker in summarization, but it produced the most consistently correct reasoning responses in the current reasoning test set.
+
+These results reinforce the need to evaluate local language models by workload rather than relying on model size or generation speed alone.
 
 ## Overall Conclusion
 
-The addition of Phi-4 14B strengthens the main conclusion of the benchmark project: model size and raw generation speed alone are poor predictors of practical usefulness.
+No single model dominated every measured workload.
 
-Llama 3.1 8B remains the fastest model but produces the weakest evaluated Finnish-language and summarization output.
+Gemma 3 12B produced the strongest overall manual quality score and remains particularly strong for Finnish-language interaction and summarization.
 
-Gemma 3 12B remains the strongest model for overall response quality, particularly for Finnish-language explanations and summarization, but its lower generation speed and longer cold start make it less responsive.
+Phi-4 14B produced the strongest reasoning results in the current reasoning benchmark set, correctly handling all four tested task types.
 
-Phi-4 14B performs reasonably well in Finnish and generates polished-looking Python code, but it currently provides neither the best quality nor the best performance. Its functional Python error and weak instruction following in summarization also show why manual evaluation remains necessary.
+Qwen3 8B provided a strong combination of speed, programming capability and non-thinking reasoning quality. Its explicit thinking mode was considerably more expensive in generated tokens and latency and did not improve the tested reasoning results.
 
-Qwen3 8B therefore remains the strongest current speed-quality compromise on this hardware. It combines near-leading generation performance with substantially better evaluated quality than Llama 3.1 8B while requiring considerably fewer resources than the larger models.
+Llama 3.1 8B delivered the highest measured generation speed, but its lower manual quality scores and reasoning errors make the performance advantage workload-dependent.
+
+The comparison therefore supports using different models for different local workloads rather than selecting a model based on a single aggregate metric.
 
 ## Limitations
 
@@ -230,5 +283,7 @@ Future testing should include:
 - factual-accuracy testing
 - instruction-following measurements
 - additional model families
+- Reasoning scores are based on four deliberately small diagnostic tasks and should not be interpreted as comprehensive measures of general reasoning ability.
+- Qwen3 8B was the only tested model with an explicit Ollama thinking capability, so thinking-mode results are not directly comparable across all four models.
 
 As the number of tested models grows, workload-specific recommendations are likely to become more useful than selecting a single overall winner.

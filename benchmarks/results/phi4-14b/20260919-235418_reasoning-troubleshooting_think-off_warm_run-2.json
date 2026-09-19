@@ -1,0 +1,84 @@
+{
+  "benchmark_timestamp": "2026-09-19T23:54:53.264852+03:00",
+  "batch_timestamp": "20260919-235418",
+  "run_number": 2,
+  "total_runs": 3,
+  "prompt_name": "reasoning-troubleshooting.md",
+  "model": "phi4:14b",
+  "think_enabled": false,
+  "run_type": "warm",
+  "context_size": 4096,
+  "temperature": 0,
+  "seed": 42,
+  "environment": {
+    "operating_system": "Windows-11-10.0.26200-SP0",
+    "python_version": "3.13.15",
+    "python_implementation": "CPython",
+    "machine_architecture": "AMD64",
+    "ollama_version": "0.34.1",
+    "model": {
+      "name": "phi4:14b",
+      "format": "gguf",
+      "family": "phi3",
+      "families": [
+        "phi3"
+      ],
+      "parameter_size": "14.7B",
+      "quantization_level": "Q4_K_M",
+      "context_length": 16384
+    }
+  },
+  "resources": {
+    "sampling_interval_seconds": 0.25,
+    "system_memory": {
+      "before_gib": 26.625,
+      "peak_gib": 26.625,
+      "after_gib": 26.559,
+      "peak_delta_gib": 0.0
+    },
+    "inference_gpu": {
+      "instance_name": "luid_0x00000000_0x00014883_phys_0",
+      "before_gib": 12.812,
+      "peak_gib": 12.812,
+      "after_gib": 12.795,
+      "peak_delta_gib": 0.0
+    },
+    "gpu_adapters": [
+      {
+        "instance_name": "luid_0x00000000_0x00014883_phys_0",
+        "before_gib": 12.812,
+        "peak_gib": 12.812,
+        "after_gib": 12.795,
+        "peak_delta_gib": 0.0
+      },
+      {
+        "instance_name": "luid_0x00000000_0x00016b35_phys_0",
+        "before_gib": 0.0,
+        "peak_gib": 0.0,
+        "after_gib": 0.0,
+        "peak_delta_gib": 0.0
+      },
+      {
+        "instance_name": "luid_0x00000000_0x00016b7c_phys_0",
+        "before_gib": 0.002,
+        "peak_gib": 0.002,
+        "after_gib": 0.002,
+        "peak_delta_gib": 0.0
+      }
+    ],
+    "sampling_error": null
+  },
+  "prompt": "A Linux server hosts a web application behind Nginx.\n\nA user reports that the application cannot be opened from another computer on the local network.\n\nThe administrator observes:\n\n- The server responds to ping from the other computer.\n- `curl http://127.0.0.1:5000` on the server returns the application successfully.\n- `curl http://192.168.1.50:5000` on the server fails with \"Connection refused\".\n- `ss -lntp` shows the application listening on `127.0.0.1:5000`.\n- Nginx is configured to proxy requests to `http://127.0.0.1:5000`.\n- Nginx is listening on `0.0.0.0:80`.\n- The firewall allows TCP port 80 from the local network.\n\nThe user is trying to open:\n\n`http://192.168.1.50/`\n\nDetermine whether the application's `127.0.0.1:5000` bind address prevents this Nginx-proxied request from working.\n\nIdentify the most important next diagnostic check and explain why.\n\nGive a concise final answer.",
+  "response": "The issue arises because the application is bound to `127.0.0.1:5000`, which means it only accepts connections from the localhost (the server itself). When Nginx, configured to listen on `0.0.0.0:80`, receives a request from another computer on the local network and proxies it to `http://127.0.0.1:5000`, the application rejects it because it is not listening on the server's external IP address (`192.168.1.50`).\n\nThe most important next diagnostic check is to verify and modify the application's bind address. Specifically, you should check the application's configuration to see if it can be set to listen on `0.0.0.0:5000` instead of `127.0.0.1:5000`. This change would allow the application to accept connections from any IP address, including those from the local network.\n\n**Final Answer:** The application is bound to `127.0.0.1:5000`, preventing external connections. Change the application's bind address to `0.0.0.0:5000` to allow connections from the local network.",
+  "thinking": "",
+  "done_reason": "stop",
+  "metrics": {
+    "total_duration_seconds": 4.483,
+    "load_duration_seconds": 0.002,
+    "prompt_eval_count": 251,
+    "prompt_eval_duration_seconds": 0.025,
+    "eval_count": 245,
+    "eval_duration_seconds": 4.453,
+    "tokens_per_second": 55.02
+  }
+}

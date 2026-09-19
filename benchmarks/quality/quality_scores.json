@@ -12,12 +12,14 @@
       "scores": {
         "finnish": 6.0,
         "python": 7.0,
-        "summarization": 6.0
+        "summarization": 6.0,
+        "reasoning": 8.0
       },
       "notes": {
         "finnish": "Understandable Finnish, but several expressions sounded translated or unnatural and the response was shorter than requested.",
         "python": "Produced a concise and mostly usable standard-library solution, although instruction following and argument descriptions were imperfect.",
-        "summarization": "Captured the main topic, but Finnish wording and instruction following were less polished than Gemma 3 12B."
+        "summarization": "Captured the main topic, but Finnish wording and instruction following were less polished than Gemma 3 12B.",
+        "reasoning": "Strong overall reasoning with thinking disabled, including correct constraint evaluation and Nginx loopback proxy diagnosis. Qwen3 thinking mode did not improve these tasks and showed a severe regression on troubleshooting, including two runs that reached the 40960-token context limit."
       }
     },
     "gemma3:12b": {
@@ -25,12 +27,14 @@
       "scores": {
         "finnish": 8.5,
         "python": 7.5,
-        "summarization": 8.0
+        "summarization": 8.0,
+        "reasoning": 7.0
       },
       "notes": {
         "finnish": "Produced the most natural Finnish of the tested models, although the price claim was overly broad.",
         "python": "Generated a comprehensive and mostly usable program, but the timeout was not configurable from the command line and the answer was unnecessarily verbose.",
-        "summarization": "Preserved the main benefits, risks and pilot decision within five sentences, but began with an unnecessary English introduction."
+        "summarization": "Preserved the main benefits, risks and pilot decision within five sentences, but began with an unnecessary English introduction.",
+        "reasoning": "Correct arithmetic, scheduling and final constraint selection, with minor internal inconsistencies. The troubleshooting test contained a significant networking reasoning error by incorrectly treating a localhost-bound backend as inaccessible to Nginx running on the same host."
       }
     },
     "llama3.1:8b": {
@@ -38,12 +42,14 @@
       "scores": {
         "finnish": 4.0,
         "python": 6.0,
-        "summarization": 3.0
+        "summarization": 3.0,
+        "reasoning": 5.5
       },
       "notes": {
         "finnish": "Finnish was repetitive and unnatural, and the separate manual test contained serious factual errors about Raspberry Pi hardware.",
         "python": "Produced a readable basic program, but the timeout was fixed, port conversion errors were not handled and some exception branches were ineffective with connect_ex.",
-        "summarization": "Exceeded the five-sentence limit substantially and contained multiple awkward or incorrect Finnish expressions."
+        "summarization": "Exceeded the five-sentence limit substantially and contained multiple awkward or incorrect Finnish expressions.",
+        "reasoning": "Handled basic arithmetic and scheduling correctly, but repeatedly accepted 25 GB as satisfying a 40 GB minimum and incorrectly concluded that a localhost-bound backend prevents same-host Nginx proxying."
       }
     },
     "phi4:14b": {
@@ -51,12 +57,14 @@
       "scores": {
         "finnish": 7.0,
         "python": 6.5,
-        "summarization": 4.5
+        "summarization": 4.5,
+        "reasoning": 9.0
        },
        "notes": {
          "finnish": "Generally understandable and reasonably fluent Finnish, but several expressions were awkward. A separate manual sanity check also incorrectly described Raspberry Pi as a computer emulator and contained additional technical wording problems.",
          "python": "Produced a clean standard-library solution with argparse and a command-line configurable timeout, but the main function ignores the boolean result from check_port, causing a closed or unreachable port to exit with status code 0 instead of an error code.",
-         "summarization": "Preserved the main benefits, risks and pilot decision reasonably well, but substantially exceeded the five-sentence limit and contained several unnatural or grammatically incorrect Finnish expressions."
+         "summarization": "Preserved the main benefits, risks and pilot decision reasonably well, but substantially exceeded the five-sentence limit and contained several unnatural or grammatically incorrect Finnish expressions.",
+         "reasoning": "Produced consistently strong results across arithmetic, scheduling, constraint evaluation and troubleshooting, with the most reliable reasoning of the tested models."
         }
       }
    

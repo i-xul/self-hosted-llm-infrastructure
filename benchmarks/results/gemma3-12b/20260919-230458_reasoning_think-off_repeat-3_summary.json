@@ -1,0 +1,146 @@
+{
+  "summary_timestamp": "2026-09-19T23:06:38.263987+03:00",
+  "batch_timestamp": "20260919-230458",
+  "model": "gemma3:12b",
+  "prompt_name": "reasoning.md",
+  "think_enabled": false,
+  "context_size": 4096,
+  "temperature": 0,
+  "seed": 42,
+  "environment": {
+    "operating_system": "Windows-11-10.0.26200-SP0",
+    "python_version": "3.13.15",
+    "python_implementation": "CPython",
+    "machine_architecture": "AMD64",
+    "ollama_version": "0.34.1",
+    "model": {
+      "name": "gemma3:12b",
+      "format": "gguf",
+      "family": "gemma3",
+      "families": [
+        "gemma3"
+      ],
+      "parameter_size": "12.2B",
+      "quantization_level": "Q4_K_M",
+      "context_length": 131072
+    }
+  },
+  "run_count": 3,
+  "cold_run_count": 1,
+  "warm_run_count": 2,
+  "statistics": {
+    "total_duration_seconds": {
+      "mean": 21.286,
+      "median": 4.628,
+      "minimum": 4.533,
+      "maximum": 54.697
+    },
+    "load_duration_seconds": {
+      "mean": 16.677,
+      "median": 0.003,
+      "minimum": 0.003,
+      "maximum": 50.025
+    },
+    "generated_tokens": {
+      "mean": 249.0,
+      "median": 249.0,
+      "minimum": 249.0,
+      "maximum": 249.0
+    },
+    "generation_duration_seconds": {
+      "mean": 4.466,
+      "median": 4.473,
+      "minimum": 4.436,
+      "maximum": 4.488
+    },
+    "tokens_per_second": {
+      "mean": 55.757,
+      "median": 55.66,
+      "minimum": 55.48,
+      "maximum": 56.13
+    }
+  },
+  "resource_statistics": {
+    "cold": {
+      "system_memory_peak_gib": {
+        "mean": 25.237,
+        "median": 25.237,
+        "minimum": 25.237,
+        "maximum": 25.237
+      },
+      "system_memory_peak_delta_gib": {
+        "mean": 7.292,
+        "median": 7.292,
+        "minimum": 7.292,
+        "maximum": 7.292
+      },
+      "inference_gpu_peak_gib": {
+        "mean": 12.424,
+        "median": 12.424,
+        "minimum": 12.424,
+        "maximum": 12.424
+      },
+      "inference_gpu_peak_delta_gib": {
+        "mean": 9.144,
+        "median": 9.144,
+        "minimum": 9.144,
+        "maximum": 9.144
+      }
+    },
+    "warm": {
+      "system_memory_peak_gib": {
+        "mean": 25.444,
+        "median": 25.444,
+        "minimum": 25.427,
+        "maximum": 25.46
+      },
+      "system_memory_peak_delta_gib": {
+        "mean": 0.271,
+        "median": 0.271,
+        "minimum": 0.094,
+        "maximum": 0.448
+      },
+      "inference_gpu_peak_gib": {
+        "mean": 12.453,
+        "median": 12.453,
+        "minimum": 12.436,
+        "maximum": 12.47
+      },
+      "inference_gpu_peak_delta_gib": {
+        "mean": 0.036,
+        "median": 0.036,
+        "minimum": 0.0,
+        "maximum": 0.072
+      }
+    }
+  },
+  "runs": [
+    {
+      "run_number": 1,
+      "run_type": "cold",
+      "total_duration_seconds": 54.697,
+      "load_duration_seconds": 50.025,
+      "generated_tokens": 249,
+      "generation_duration_seconds": 4.473,
+      "tokens_per_second": 55.66
+    },
+    {
+      "run_number": 2,
+      "run_type": "warm",
+      "total_duration_seconds": 4.628,
+      "load_duration_seconds": 0.003,
+      "generated_tokens": 249,
+      "generation_duration_seconds": 4.488,
+      "tokens_per_second": 55.48
+    },
+    {
+      "run_number": 3,
+      "run_type": "warm",
+      "total_duration_seconds": 4.533,
+      "load_duration_seconds": 0.003,
+      "generated_tokens": 249,
+      "generation_duration_seconds": 4.436,
+      "tokens_per_second": 56.13
+    }
+  ]
+}

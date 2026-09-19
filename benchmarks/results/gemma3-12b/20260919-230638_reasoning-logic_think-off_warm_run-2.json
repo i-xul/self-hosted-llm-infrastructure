@@ -1,0 +1,84 @@
+{
+  "benchmark_timestamp": "2026-09-19T23:07:14.425414+03:00",
+  "batch_timestamp": "20260919-230638",
+  "run_number": 2,
+  "total_runs": 3,
+  "prompt_name": "reasoning-logic.md",
+  "model": "gemma3:12b",
+  "think_enabled": false,
+  "run_type": "warm",
+  "context_size": 4096,
+  "temperature": 0,
+  "seed": 42,
+  "environment": {
+    "operating_system": "Windows-11-10.0.26200-SP0",
+    "python_version": "3.13.15",
+    "python_implementation": "CPython",
+    "machine_architecture": "AMD64",
+    "ollama_version": "0.34.1",
+    "model": {
+      "name": "gemma3:12b",
+      "format": "gguf",
+      "family": "gemma3",
+      "families": [
+        "gemma3"
+      ],
+      "parameter_size": "12.2B",
+      "quantization_level": "Q4_K_M",
+      "context_length": 131072
+    }
+  },
+  "resources": {
+    "sampling_interval_seconds": 0.25,
+    "system_memory": {
+      "before_gib": 25.42,
+      "peak_gib": 25.587,
+      "after_gib": 25.57,
+      "peak_delta_gib": 0.167
+    },
+    "inference_gpu": {
+      "instance_name": "luid_0x00000000_0x00014883_phys_0",
+      "before_gib": 12.538,
+      "peak_gib": 12.538,
+      "after_gib": 12.538,
+      "peak_delta_gib": 0.0
+    },
+    "gpu_adapters": [
+      {
+        "instance_name": "luid_0x00000000_0x00014883_phys_0",
+        "before_gib": 12.538,
+        "peak_gib": 12.538,
+        "after_gib": 12.538,
+        "peak_delta_gib": 0.0
+      },
+      {
+        "instance_name": "luid_0x00000000_0x00016b35_phys_0",
+        "before_gib": 0.0,
+        "peak_gib": 0.0,
+        "after_gib": 0.0,
+        "peak_delta_gib": 0.0
+      },
+      {
+        "instance_name": "luid_0x00000000_0x00016b7c_phys_0",
+        "before_gib": 0.002,
+        "peak_gib": 0.002,
+        "after_gib": 0.002,
+        "peak_delta_gib": 0.0
+      }
+    ],
+    "sampling_error": null
+  },
+  "prompt": "A maintenance window has four tasks:\n\n- Task A takes 30 minutes.\n- Task B takes 45 minutes and can only start after Task A is complete.\n- Task C takes 20 minutes and can run at the same time as Task B.\n- Task D takes 15 minutes and can only start after both Task B and Task C are complete.\n\nThe maintenance window starts at 22:00.\n\nAssume Task A starts immediately at 22:00 and each dependent task starts as soon as its requirements are satisfied.\n\nDetermine the earliest time Task D can finish.\n\nShow the timeline clearly and give a concise final answer.",
+  "response": "Okay, let's break down the maintenance window schedule and determine the earliest finish time for Task D.\n\n**Timeline:**\n\n*   **22:00 - 22:30:** Task A (30 minutes)\n*   **22:30 - 23:15:** Task B (45 minutes) - Starts after Task A\n*   **22:30 - 22:50:** Task C (20 minutes) - Runs concurrently with Task B.\n*   **22:50 - 23:15:** Task C finishes.\n*   **23:15 - 23:30:** Task D (15 minutes) - Starts after Task B and Task C are complete.\n\n**Calculations:**\n\n*   Task A finishes at 22:30.\n*   Task B starts at 22:30 and finishes at 23:15.\n*   Task C starts at 22:30 and finishes at 22:50.\n*   Task D starts at 23:15 and finishes at 23:30.\n\n**Final Answer:**\n\nThe earliest time Task D can finish is **23:30**.",
+  "thinking": "",
+  "done_reason": "stop",
+  "metrics": {
+    "total_duration_seconds": 5.036,
+    "load_duration_seconds": 0.002,
+    "prompt_eval_count": 150,
+    "prompt_eval_duration_seconds": 0.095,
+    "eval_count": 275,
+    "eval_duration_seconds": 4.886,
+    "tokens_per_second": 56.29
+  }
+}

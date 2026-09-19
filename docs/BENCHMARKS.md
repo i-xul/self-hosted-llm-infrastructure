@@ -155,16 +155,39 @@ Evaluate:
 
 Reasoning should be evaluated separately from factual correctness.
 
-When supported by the model, compare:
+The reasoning benchmark uses multiple task types so that the comparison does not depend on a single style of problem:
 
-* Reasoning mode
-* Non-reasoning mode
+* `reasoning.md` — arithmetic and capacity calculation
+* `reasoning-logic.md` — dependency and scheduling logic
+* `reasoning-constraints.md` — multi-constraint evaluation
+* `reasoning-troubleshooting.md` — technical diagnosis and interpretation
 
-Record differences in:
+Each model should be evaluated using the same deterministic benchmark configuration.
 
-* Response speed
-* Output quality
-* Practical usefulness
+The evaluation should consider:
+
+* correctness of the final answer
+* correctness of intermediate reasoning
+* constraint handling
+* technical accuracy
+* instruction following
+* conciseness and practical usefulness
+* consistency across repeated runs
+
+When a model explicitly supports a reasoning or thinking mode, compare thinking-enabled and thinking-disabled execution separately.
+
+Thinking mode should not automatically be considered superior. Record its effect on:
+
+* response latency
+* generated token count
+* generation speed
+* answer quality
+* stability
+* failure modes
+
+Models without an explicit thinking capability should be evaluated using their normal generation mode rather than treating the absence of thinking mode as a disadvantage.
+
+Reasoning scores are based on a deliberately small diagnostic test set and should not be interpreted as comprehensive measures of general reasoning ability.
 
 ---
 
@@ -235,15 +258,30 @@ Resource measurements are sampled periodically during benchmark execution. The c
 
 Repeated benchmark summaries report RAM and inference-GPU VRAM statistics separately for cold and warm runs. This distinction is important because cold runs include model-loading memory allocation, while warm runs primarily measure resource usage with the model already resident in memory.
 
-## Initial Qwen3 8B Observation
+## Reasoning Benchmark Observations
 
-Initial testing showed approximately:
+The current reasoning comparison includes Qwen3 8B, Gemma 3 12B, Llama 3.1 8B and Phi-4 14B.
 
-- 75 tokens per second in non-reasoning mode
-- 75 tokens per second in reasoning mode
-- significantly higher total token output in reasoning mode
-- approximately 35 seconds for the first HDD-backed cold start
-- approximately 2 seconds for a warm non-reasoning response
+The four diagnostic reasoning tasks cover arithmetic, scheduling, constraint evaluation and technical troubleshooting.
+
+Initial cross-model testing showed clear differences between models:
+
+* Phi-4 14B produced the most consistently correct responses across the four reasoning task types.
+* Qwen3 8B performed strongly with thinking disabled and correctly handled the technical Nginx troubleshooting scenario.
+* Gemma 3 12B handled the simpler reasoning tasks successfully but made an important error in the Nginx troubleshooting scenario.
+* Llama 3.1 8B handled basic arithmetic and scheduling but made errors in both constraint evaluation and technical troubleshooting.
+
+Qwen3 8B was additionally tested with Ollama thinking mode enabled because it is the only model in the current four-model comparison that explicitly exposes a thinking capability.
+
+Thinking mode did not improve the practical results in the tested tasks and substantially increased generated token counts and response latency.
+
+The most significant failure occurred in the `reasoning-troubleshooting.md` benchmark. Two thinking-enabled warm runs generated 40,960 tokens and reached the model's configured context limit instead of producing an appropriately concise answer.
+
+This result demonstrates that explicit thinking mode can introduce substantial computational and latency overhead and may also expose failure modes that are not present during normal non-thinking generation.
+
+Thinking-mode results should therefore be treated as a separate model capability rather than being directly compared with models that do not expose an equivalent explicit reasoning mode.
+
+Detailed per-model reasoning observations and preliminary manual scores are maintained in the benchmark comparison and quality-evaluation files.
 
 ---
 

@@ -128,12 +128,13 @@ def build_leaderboard_markdown(
 
         quality_rows.append(
             "| {rank} | {model} | {finnish} | {python} | "
-            "{summary_score} | {overall} |".format(
+            "{summary_score} | {reasoning} | {overall} |".format(
                 rank=rank,
                 model=_display_name(summary["model"], quality_models),
                 finnish=_format_score(scores.get("finnish")),
                 python=_format_score(scores.get("python")),
                 summary_score=_format_score(scores.get("summarization")),
+                reasoning=_format_score(scores.get("reasoning")),
                 overall=_format_score(model_quality.get("overall_score")),
             )
         )
@@ -158,8 +159,8 @@ def build_leaderboard_markdown(
         + "\n".join(performance_rows)
         + "\n\n"
         "## Manual Quality Ranking\n\n"
-        "| Rank | Model | Finnish | Python | Summarization | Overall |\n"
-        "|---:|---|---:|---:|---:|---:|\n"
+        "| Rank | Model | Finnish | Python | Summarization | Reasoning | Overall |\n"
+        "|---:|---|---:|---:|---:|---:|---:|\n"
         + "\n".join(quality_rows)
         + "\n\n"
         f"Quality scale: {scale.get('minimum', 1)}–"
