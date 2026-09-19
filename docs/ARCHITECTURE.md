@@ -116,7 +116,7 @@ A future stage may move the interface and supporting services to a separate Linu
 
 ```text
                      Private network
-                LAN / Tailscale / Meshnet
+              LAN / private VPN tunnel
                            │
                            ▼
               Ubuntu computer or Raspberry Pi 5
@@ -177,6 +177,8 @@ Current implementation:
 * Browser-based chat interface
 * Persistent Docker volume for Open WebUI application data
 * Connection to the Windows-hosted Ollama API through `host.docker.internal`
+* Docker Desktop is configured to start automatically when the Windows user signs in
+* The Open WebUI container uses the Docker restart policy `always`
 
 Future additions may include:
 
@@ -200,7 +202,7 @@ Current implementation:
 * Local browser access to Open WebUI has been verified
 * Direct public internet exposure is not part of the architecture
 * Open WebUI access from another device on the private LAN has been verified
-* Windows Firewall allows inbound TCP port `3000` on the Private network profile
+* Windows Firewall allows inbound TCP port `3000` on the Private network profile only from the trusted home LAN subnet `192.168.1.0/24`
 
 Current verified LAN path:
 
@@ -229,14 +231,17 @@ AMD Radeon RX 7800 XT
 
 The complete browser-to-GPU path has been verified from a separate LAN device.
 
-Planned private access methods:
+Current private access method:
 
 * Local area network
-* Tailscale
-* NordVPN Meshnet
-* Restricted Windows Firewall rules
+* Open WebUI access restricted to the trusted home LAN
+* Windows Firewall restricted to the `192.168.1.0/24` source network on the Private profile
 
-Remote access should use a trusted private network path such as Tailscale or NordVPN Meshnet rather than public port forwarding.
+Open WebUI is currently intended for access only from the trusted home LAN.
+
+External remote access is intentionally deferred to a later project phase. A suitable encrypted private-network or VPN solution will be evaluated separately before access from outside the home network is enabled.
+
+Open WebUI and the Ollama API must not be exposed directly to the public internet.
 
 The network design should expose only the services required by clients. The Ollama API should remain restricted to trusted systems and does not need to be directly accessible to ordinary Open WebUI users.
 

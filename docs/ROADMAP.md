@@ -78,11 +78,13 @@ Separate the inference node from the user interface.
 ### Planned
 
 * [ ] Allow secure API access from Ubuntu
-* [ ] Configure Windows Firewall
-* [ ] Restrict network access
-* [ ] Test LAN connectivity
-* [ ] Test Tailscale connectivity
-* [ ] Test NordVPN Meshnet connectivity
+* [x] Configure Windows Firewall for Open WebUI LAN access
+* [x] Restrict Open WebUI LAN access with Windows Firewall
+* [x] Restrict Open WebUI access to the trusted `192.168.1.0/24` subnet
+* [x] Test LAN connectivity from another device
+* [x] Verify browser-to-GPU inference over the private LAN
+* [ ] Evaluate a suitable encrypted VPN or private-network solution for external remote access
+* [ ] Test external remote access after a suitable solution has been selected
 
 ---
 

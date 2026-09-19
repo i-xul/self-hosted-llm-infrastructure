@@ -33,11 +33,13 @@ At this stage, all inference remains on the local Windows workstation.
 
 The inference API should never be exposed directly to the public internet.
 
-Future remote access should be limited to trusted private networks such as:
+Current Open WebUI access is limited to the trusted Local Area Network (LAN).
 
-* Local Area Network (LAN)
-* Tailscale
-* NordVPN Meshnet
+Windows Firewall restricts inbound Open WebUI access on TCP port `3000` to the trusted `192.168.1.0/24` subnet on the Private network profile.
+
+External remote access is intentionally deferred. A suitable encrypted VPN or private-network solution must be evaluated before access from outside the home network is enabled.
+
+Open WebUI and the Ollama API must not be exposed directly to the public internet.
 
 Any required firewall rules should follow the principle of least privilege.
 
