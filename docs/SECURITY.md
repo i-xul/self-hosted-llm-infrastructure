@@ -47,13 +47,12 @@ Any required firewall rules should follow the principle of least privilege.
 
 # Authentication
 
-Future user interfaces should require authentication.
+Open WebUI authentication is enabled and required for the current browser-based interface.
 
-Examples include:
+Future authentication layers may include:
 
-* Open WebUI authentication
 * Reverse proxy authentication
-* Multi-user access (if implemented)
+* Multi-user access controls (if implemented)
 
 Anonymous access should never be enabled outside isolated development environments.
 
